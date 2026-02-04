@@ -168,7 +168,26 @@ const TypewriterLetterPage = ({ title, content, onNext, emoji }) => {
   );
 };
 
-const ProposalPage = ({ onAccept, onDeny, noBtnPos, moveNoBtn, yesScale }) => (
+// ❤️ NEW: Floating heart effect component
+const FloatingHeart = ({ id }) => (
+  <motion.div
+    key={id}
+    initial={{ opacity: 1, y: 0, scale: 0.5 }}
+    animate={{ opacity: 0, y: -60, scale: 1 }}
+    transition={{ duration: 1 }}
+    style={{
+      position: "absolute",
+      left: Math.random() * 40 + "%",
+      top: -10,
+      fontSize: "1.5rem",
+      pointerEvents: "none"
+    }}
+  >
+    💖
+  </motion.div>
+);
+
+const ProposalPage = ({ onAccept, noBtnPos, moveNoBtn, yesScale, shake }) => (
   <motion.div
     className="glass-card proposal-card"
     initial={{ opacity: 0, scale: 0.9 }}
@@ -217,24 +236,19 @@ const ProposalPage = ({ onAccept, onDeny, noBtnPos, moveNoBtn, yesScale }) => (
 
     <div className="action-buttons">
 
-      {/* YES BUTTON WITH SCALE CONTROL */}
+      {/* ❤️ YES BUTTON WITH SHAKE + PULSE + GROW */}
       <motion.button
         className="yes-button"
         onClick={onAccept}
+
         animate={{
           scale: yesScale,
-          boxShadow: [
-            "0 10px 20px rgba(255, 107, 157, 0.2)",
-            "0 10px 30px rgba(255, 107, 157, 0.4)",
-            "0 10px 20px rgba(255, 107, 157, 0.2)"
-          ]
+          rotate: shake ? [0, -5, 5, -5, 5, 0] : 0, // NEW SHAKE ANIMATION
         }}
+        transition={{ duration: 0.3 }}
+
         whileHover={{ scale: yesScale * 1.1 }}
         whileTap={{ scale: yesScale * 0.95 }}
-        transition={{
-          duration: 0.3,
-          boxShadow: { duration: 2, repeat: Infinity }
-        }}
       >
         Yes, I Will! 💖
       </motion.button>
@@ -259,22 +273,33 @@ function App() {
 
   const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
 
-  // NEW: Yes Button Scale
-  const [yesScale, setYesScale] = useState(1);
+  const [yesScale, setYesScale] = useState(1);  // YES grows slowly
+  const [shake, setShake] = useState(false);     // YES shakes
+  const [hearts, setHearts] = useState([]);      // YES pops hearts
 
   const moveNoButton = () => {
     const x = Math.random() * 200 - 100;
     const y = Math.random() * 200 - 100;
-
     setNoButtonPos({ x, y });
 
-    // Make the YES button grow each time no is hovered
-    setYesScale(prev => Math.min(prev + 0.2, 2)); // capped at 2x size
+    // YES grows slowly
+    setYesScale(prev => Math.min(prev + 0.1, 2));
+
+    // YES shakes briefly
+    setShake(true);
+    setTimeout(() => setShake(false), 300);
+
+    // Pop a heart
+    const id = Math.random();
+    setHearts(prev => [...prev, id]);
+
+    // Remove heart after animation
+    setTimeout(() => {
+      setHearts(prev => prev.filter(h => h !== id));
+    }, 1000);
   };
 
-  const handleNext = () => {
-    setStep(prev => prev + 1);
-  };
+  const handleNext = () => setStep(prev => prev + 1);
 
   const affirmationData = {
     title: "Hi Ashabi...",
@@ -284,7 +309,7 @@ function App() {
 
   const letterData = {
     title: "Dear Monisola,",
-    content: "  Been thinking about how lucky I am to have you around.\nYour laugh, your little quirks, and yes… even the way you annoy me constantly, it all makes me adore you even more.\nI love our silly jokes, our random adventures, and even the playful chaos you bring.\nYou’re my favorite human, my partner in trouble, and honestly, I can’t imagine life without you.\n\nSo, let’s keep making memories, mischief, and teasing each other forever.",
+    content: "  Been thinking about how lucky I am to have you around.\nYour laugh, your little quirks, and yes… even the way you annoy me constantly — somehow, it all makes me adore you even more.\nI love our silly jokes, our random adventures, and even the playful chaos you bring.\nYou’re my favorite human, my partner in trouble, and honestly, I can’t imagine life without you.\n\nSo, let’s keep making memories, mischief, and teasing each other forever.",
     emoji: "💌"
   };
 
@@ -292,6 +317,9 @@ function App() {
     <div className="app-container">
       <div className="gradient-bg"></div>
       <FloatingBackground />
+
+      {/* Floating hearts */}
+      {hearts.map(id => <FloatingHeart key={id} id={id} />)}
 
       <AnimatePresence mode="wait">
         {!accepted ? (
@@ -305,6 +333,7 @@ function App() {
                 onNext={handleNext}
               />
             )}
+
             {step === 1 && (
               <TypewriterLetterPage
                 key="step-1"
@@ -314,14 +343,15 @@ function App() {
                 onNext={handleNext}
               />
             )}
+
             {step === 2 && (
               <ProposalPage
                 key="proposal"
                 onAccept={() => setAccepted(true)}
-                onDeny={moveNoButton}
                 noBtnPos={noButtonPos}
                 moveNoBtn={moveNoButton}
                 yesScale={yesScale}
+                shake={shake}
               />
             )}
           </>
