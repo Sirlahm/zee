@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './App.css';
 
-// Floating background elements
+// Floating background (unchanged)
 const FloatingBackground = () => {
   const [elements, setElements] = useState([]);
 
   useEffect(() => {
-    // Create random hearts and sparkles
     const count = 50;
     const newElements = Array.from({ length: count }, (_, i) => ({
       id: i,
@@ -53,44 +52,42 @@ const FloatingBackground = () => {
   );
 };
 
-const SuccessView = () => {
-  return (
+const SuccessView = () => (
+  <motion.div
+    className="success-view-container"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1 }}
+  >
     <motion.div
-      className="success-view-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
+      className="big-heart-container"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.3 }}
     >
-      <motion.div
-        className="big-heart-container"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.3 }}
-      >
-        <div className="big-heart">💝</div>
-      </motion.div>
-
-      <motion.h1
-        className="success-title"
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.8 }}
-      >
-        YAAAY!
-      </motion.h1>
-
-      <motion.p
-        className="success-message"
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.8 }}
-      >
-        I knew you'd say yes, Zainab! <br />
-        Love YOU 🥂✨
-      </motion.p>
+      <div className="big-heart">💝</div>
     </motion.div>
-  );
-};
+
+    <motion.h1
+      className="success-title"
+      initial={{ y: 30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.6, duration: 0.8 }}
+    >
+      YAAAY!
+    </motion.h1>
+
+    <motion.p
+      className="success-message"
+      initial={{ y: 30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.9, duration: 0.8 }}
+    >
+      I knew you'd say yes, Zainab! <br />
+      Love YOU 🥂✨
+    </motion.p>
+  </motion.div>
+);
 
 const MessagePage = ({ title, content, onNext, emoji }) => (
   <motion.div
@@ -109,67 +106,7 @@ const MessagePage = ({ title, content, onNext, emoji }) => (
   </motion.div>
 );
 
-const TypewriterLetterPage = ({ title, content, onNext, emoji }) => {
-  const [displayedContent, setDisplayedContent] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
-
-  useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index < content.length) {
-        setDisplayedContent((prev) => prev + content.charAt(index));
-        index++;
-      } else {
-        setIsTyping(false);
-        clearInterval(timer);
-      }
-    }, 120); // Slower typing speed
-
-    return () => clearInterval(timer);
-  }, [content]);
-
-  return (
-    <motion.div
-      className="glass-card message-card"
-      initial={{ opacity: 0, x: 50 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -50 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
-    >
-      <div className="page-emoji">{emoji}</div>
-      <h2 className="message-title">{title}</h2>
-
-      <div className="letter-container" style={{ position: 'relative', width: '100%', marginBottom: '20px' }}>
-        <div className="message-content" style={{ textAlign: 'left', minHeight: '120px', whiteSpace: 'pre-line', lineHeight: '1.6' }}>
-          {displayedContent}
-          {isTyping && (
-            <motion.span
-              className="pencil-cursor"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, rotate: [0, 10, 0] }}
-              transition={{ rotate: { repeat: Infinity, duration: 0.2 } }}
-              style={{ display: 'inline-block', marginLeft: '5px', fontSize: '1.2rem' }}
-            >
-              ✏️
-            </motion.span>
-          )}
-        </div>
-      </div>
-
-      <motion.button
-        className="next-button"
-        onClick={onNext}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isTyping ? 0 : 1 }}
-        style={{ pointerEvents: isTyping ? 'none' : 'auto' }}
-      >
-        Continue <span>&rarr;</span>
-      </motion.button>
-    </motion.div>
-  );
-};
-
-const ProposalPage = ({ onAccept, onDeny, noBtnPos, moveNoBtn }) => (
+const ProposalPage = ({ onAccept, moveNoBtn, noBtnPos, yesScale }) => (
   <motion.div
     className="glass-card proposal-card"
     initial={{ opacity: 0, scale: 0.9 }}
@@ -177,12 +114,7 @@ const ProposalPage = ({ onAccept, onDeny, noBtnPos, moveNoBtn }) => (
     exit={{ opacity: 0, scale: 0.9 }}
     transition={{ duration: 0.8 }}
   >
-    <motion.div
-      className="card-header"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3 }}
-    >
+    <motion.div className="card-header">
       <span className="subtitle">One Last Question...</span>
     </motion.div>
 
@@ -220,18 +152,8 @@ const ProposalPage = ({ onAccept, onDeny, noBtnPos, moveNoBtn }) => (
       <motion.button
         className="yes-button"
         onClick={onAccept}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        animate={{
-          boxShadow: [
-            "0 10px 20px rgba(255, 107, 157, 0.2)",
-            "0 10px 30px rgba(255, 107, 157, 0.4)",
-            "0 10px 20px rgba(255, 107, 157, 0.2)"
-          ]
-        }}
-        transition={{
-          boxShadow: { duration: 2, repeat: Infinity }
-        }}
+        animate={{ scale: yesScale }}
+        transition={{ type: "spring", stiffness: 200, damping: 12 }}
       >
         Yes, I Will! 💖
       </motion.button>
@@ -242,7 +164,6 @@ const ProposalPage = ({ onAccept, onDeny, noBtnPos, moveNoBtn }) => (
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         onMouseEnter={moveNoBtn}
         onClick={moveNoBtn}
-        whileTap={{ scale: 0.9 }}
       >
         No 😅
       </motion.button>
@@ -254,29 +175,27 @@ function App() {
   const [step, setStep] = useState(0);
   const [accepted, setAccepted] = useState(false);
   const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
+  const [yesScale, setYesScale] = useState(1);
 
   const moveNoButton = () => {
     const x = Math.random() * 200 - 100;
     const y = Math.random() * 200 - 100;
+
     setNoButtonPos({ x, y });
+
+    // Make YES button grow slightly each time
+    setYesScale(prev => Math.min(prev + 0.1, 2));
   };
 
-  const handleNext = () => {
-    setStep(prev => prev + 1);
-  };
+  const handleNext = () => setStep(prev => prev + 1);
 
-  // Step 0: Affirmation with humor
   const affirmationData = {
     title: "Hi Ashabi...",
-    content: "You are smart, beautiful, and kinda weird (but in a good way). You make even the ordinary days feel extraordinary. That's true love right there.",
-    emoji: "🌸"
-  };
-
-  // Step 1: Letter with humor and cleaner spacing
-  const letterData = {
-    title: "Dear Monisola,",
-    content: "I’ve been thinking about how lucky I am to have you around.\nYour laugh, your little quirks, and yes… even the way you annoy me constantly — somehow, it all makes me adore you even more.\nI love our silly jokes, our random adventures, and even the playful chaos you bring.\nYou’re my favorite human, my partner in trouble, and honestly, I can’t imagine life without you.\n\nSo, let’s keep making memories, mischief, and teasing each other forever.",
-    emoji: "💌"
+    emoji: "🌸",
+    content:
+      "Just wanted to remind you of something important:\n\n" +
+      "You’re adorable, chaotic in the cutest way, and somehow always make me laugh even when I’m trying to stay serious. 🥺💗\n\n" +
+      "You make even the ordinary days feel extraordinary and honestly… life is way better with you in it."
   };
 
   return (
@@ -296,22 +215,14 @@ function App() {
                 onNext={handleNext}
               />
             )}
+
             {step === 1 && (
-              <TypewriterLetterPage
-                key="step-1"
-                title={letterData.title}
-                content={letterData.content}
-                emoji={letterData.emoji}
-                onNext={handleNext}
-              />
-            )}
-            {step === 2 && (
               <ProposalPage
                 key="proposal"
                 onAccept={() => setAccepted(true)}
-                onDeny={moveNoButton}
-                noBtnPos={noButtonPos}
                 moveNoBtn={moveNoButton}
+                noBtnPos={noButtonPos}
+                yesScale={yesScale}
               />
             )}
           </>
