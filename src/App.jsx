@@ -2,363 +2,518 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './App.css';
 
-// Floating background elements
+// 🎨 Modern Floating Background
 const FloatingBackground = () => {
-  const [elements, setElements] = useState([]);
-
-  useEffect(() => {
-    const count = 50;
-    const newElements = Array.from({ length: count }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      scale: Math.random() * 0.5 + 0.5,
-      duration: Math.random() * 20 + 10,
-      delay: Math.random() * 5,
-      type: Math.random() > 0.7 ? 'sparkle' : 'heart',
-      emoji: Math.random() > 0.7 ? '✨' : '💖'
-    }));
-    setElements(newElements);
-  }, []);
+  const shapes = ['💫', '✨', '🌟', '💝', '🦋', '🌸', '💕'];
 
   return (
-    <div className="floating-background">
-      {elements.map((el) => (
+    <div className="floating-bg">
+      {Array.from({ length: 30 }).map((_, i) => (
         <motion.div
-          key={el.id}
-          className={`floating-element ${el.type}`}
+          key={i}
+          className="floating-shape"
           initial={{
-            x: `${el.left}vw`,
-            y: '120vh',
-            opacity: 0,
-            scale: 0
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
           }}
           animate={{
-            y: '-20vh',
-            opacity: [0, 0.8, 0],
-            scale: [0, el.scale, 0],
-            rotate: [0, 180, 360]
+            y: [null, -100, Math.random() * window.innerHeight],
+            x: [null, Math.random() * window.innerWidth],
+            rotate: [0, 360],
+            scale: [1, 1.2, 1],
           }}
           transition={{
-            duration: el.duration,
-            delay: el.delay,
+            duration: Math.random() * 20 + 15,
             repeat: Infinity,
             ease: "linear"
           }}
         >
-          {el.emoji}
+          {shapes[Math.floor(Math.random() * shapes.length)]}
         </motion.div>
       ))}
     </div>
   );
 };
 
-const SuccessView = () => {
+// 🔐 Password Modal
+const PasswordModal = ({ onUnlock }) => {
+  const [input, setInput] = useState('');
+  const [shake, setShake] = useState(false);
+  const [hint, setHint] = useState('');
+
+  const SECRET_KEY = 'ashabi';
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.toLowerCase() === SECRET_KEY) {
+      onUnlock();
+    } else {
+      setShake(true);
+      setHint('Hmm... try again, baby! 😏');
+      setTimeout(() => setShake(false), 500);
+      setInput('');
+    }
+  };
+
   return (
     <motion.div
-      className="success-view-container"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
+      className="password-modal"
     >
+      <FloatingBackground />
       <motion.div
-        className="big-heart-container"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.3 }}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="password-card glass"
       >
-        <div className="big-heart">💝</div>
+        <motion.div
+          animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="emoji-large">🔐</div>
+          <h2 className="title-large">
+            For Your Eyes Only
+          </h2>
+          <p className="subtitle">
+            Enter a keyword, beautiful 💕
+          </p>
+
+          <form onSubmit={handleSubmit} className="password-form">
+            <input
+              type="password"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type the magic words..."
+              className="password-input glass"
+              autoFocus
+            />
+
+            {hint && (
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="hint-text text-red-500"
+              >
+                {hint}
+              </motion.p>
+            )}
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              type="submit"
+              className="btn-primary"
+            >
+              Unlock 💖
+            </motion.button>
+          </form>
+
+          <p className="hintt">
+            Hint: It's what i call you moment of the time... 😉
+          </p>
+
+        </motion.div>
       </motion.div>
-
-      <motion.h1
-        className="success-title"
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.8 }}
-      >
-        YAAAY!
-      </motion.h1>
-
-      <motion.p
-        className="success-message"
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.8 }}
-      >
-        I knew you'd say yes, Zainab! <br />
-        Love YOU 🥂✨
-      </motion.p>
     </motion.div>
   );
 };
 
-const MessagePage = ({ title, content, onNext, emoji }) => (
+// 🌟 Welcome Page
+const WelcomePage = ({ onNext }) => (
   <motion.div
-    className="glass-card message-card"
-    initial={{ opacity: 0, x: 50 }}
-    animate={{ opacity: 1, x: 0 }}
-    exit={{ opacity: 0, x: -50 }}
-    transition={{ duration: 0.8, ease: "easeInOut" }}
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -50 }}
+    className="page-container"
   >
-    <div className="page-emoji">{emoji}</div>
-    <h2 className="message-title">{title}</h2>
-    <p className="message-content" style={{ textAlign: 'center' }}>{content}</p>
-    <button className="next-button" onClick={onNext}>
-      Continue <span>&rarr;</span>
-    </button>
+    <div className="content-center">
+      <motion.div
+        animate={{
+          rotate: [0, 10, -10, 0],
+          scale: [1, 1.1, 1]
+        }}
+        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+        className="emoji-huge"
+      >
+        👑
+      </motion.div>
+      <h1 className="title-hero">
+        Hello, My Queen
+      </h1>
+      <p className="text-large">
+        Welcome to your personal space of love, laughs, and everything in between ✨
+      </p>
+      <motion.button
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={onNext}
+        className="btn-secondary"
+      >
+        Let's Go! 💕
+      </motion.button>
+    </div>
   </motion.div>
 );
 
-const TypewriterLetterPage = ({ title, content, onNext, emoji }) => {
-  const [displayedContent, setDisplayedContent] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
+// 😂 Humor Page
+const HumorPage = ({ onNext }) => {
+  const jokes = [
+    {
+      setup: "Why did I fall for you?",
+      punchline: "Because you're literally impossible to ignore! Like a notification I actually want to check 😂",
+      emoji: "🤣"
+    },
+    {
+      setup: "What do you and coffee have in common?",
+      punchline: "You both keep me awake at night... but you're way cuter and less caffeinated! ☕",
+      emoji: "😴"
+    },
+    {
+      setup: "Know what's crazy?",
+      punchline: "I love you even when you piss the hell out of me. That's TRUE love right there! 🛏️",
+      emoji: "😤"
+    }
+  ];
 
-  useEffect(() => {
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index < content.length) {
-        setDisplayedContent((prev) => prev + content.charAt(index));
-        index++;
-      } else {
-        setIsTyping(false);
-        clearInterval(timer);
-      }
-    }, 120);
+  const [currentJoke, setCurrentJoke] = useState(0);
+  const [showPunchline, setShowPunchline] = useState(false);
 
-    return () => clearInterval(timer);
-  }, [content]);
+  const nextJoke = () => {
+    if (currentJoke < jokes.length - 1) {
+      setShowPunchline(false);
+      setTimeout(() => setCurrentJoke(prev => prev + 1), 300);
+    } else {
+      onNext();
+    }
+  };
+
+  const joke = jokes[currentJoke];
 
   return (
     <motion.div
-      className="glass-card message-card"
-      initial={{ opacity: 0, x: 50 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -50 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      className="page-container"
     >
-      <div className="page-emoji">{emoji}</div>
-      <h2 className="message-title">{title}</h2>
+      <div className="card glass">
+        <motion.div
+          key={currentJoke}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="card-content"
+        >
+          <div className="emoji-large">{joke.emoji}</div>
+          <h2 className="title-medium">
+            {joke.setup}
+          </h2>
 
-      <div className="letter-container" style={{ position: 'relative', width: '100%', marginBottom: '20px' }}>
-        <div className="message-content" style={{ textAlign: 'left', minHeight: '120px', whiteSpace: 'pre-line', lineHeight: '1.6' }}>
-          {displayedContent}
-          {isTyping && (
-            <motion.span
-              className="pencil-cursor"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, rotate: [0, 10, 0] }}
-              transition={{ rotate: { repeat: Infinity, duration: 0.2 } }}
-              style={{ display: 'inline-block', marginLeft: '5px', fontSize: '1.2rem' }}
+          <AnimatePresence>
+            {showPunchline && (
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-medium punchline"
+              >
+                {joke.punchline}
+              </motion.p>
+            )}
+          </AnimatePresence>
+
+          {!showPunchline ? (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowPunchline(true)}
+              className="btn-accent"
             >
-              ✏️
-            </motion.span>
+              Tell Me! 😆
+            </motion.button>
+          ) : (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={nextJoke}
+              className="btn-secondary"
+            >
+              {currentJoke < jokes.length - 1 ? "Next One! 😂" : "Continue →"}
+            </motion.button>
           )}
+
+          <div className="progress-dots">
+            {jokes.map((_, i) => (
+              <div
+                key={i}
+                className={`dot ${i === currentJoke ? 'dot-active' : ''}`}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+// 💝 Affirmation Page
+const AffirmationPage = ({ onNext }) => {
+  const affirmations = [
+    "You light up my world like nobody else 🌟",
+    "Your voice is my favorite notification 😊",
+    "You're the plot twist I never saw coming... and the best part of my story 📖",
+    "Decent, gorgeous, and hilariously weird = Perfect combo! 🎯",
+
+  ];
+
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % affirmations.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="page-container"
+    >
+      <div className="content-center-wide">
+        <motion.div
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="emoji-huge"
+        >
+          💖
+        </motion.div>
+
+        <h2 className="title-large">
+          Just So You Know...
+        </h2>
+
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={current}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="affirmation-text"
+          >
+            "{affirmations[current]}"
+          </motion.p>
+        </AnimatePresence>
+
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onNext}
+          className="btn-primary"
+        >
+          You're Making Me Blush! 😊
+        </motion.button>
+      </div>
+    </motion.div>
+  );
+};
+
+// 💌 Love Letter Page
+const LoveLetterPage = ({ onNext }) => {
+  const [revealed, setRevealed] = useState(false);
+
+  const letter = `My Dearest Zee,
+
+I know I can be silly, annoying, and sometimes disturb you with calls throughout the day... but somehow you still choose to keep me around. That's either true love or temporary insanity, and I'm hoping it's the first one! 😂
+
+You make the boring stuff fun.  You laugh at my terrible jokes (or at least pretend to). You're my best friend, my partner in crime, and the person I want to annoy for the rest of my life.
+
+Thanks for being YOU - perfectly imperfect, wonderfully weird, and absolutely mine.
+
+Forever and always,
+Your Favorite Weirdo 💕`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="page-container"
+    >
+      <div className="letter-container">
+        <motion.div
+          initial={{ rotateY: 0 }}
+          animate={{ rotateY: revealed ? 180 : 0 }}
+          transition={{ duration: 0.6 }}
+          className="letter-flip"
+        >
+          {/* Front of envelope */}
+          <div className={`letter-front ${revealed ? 'hidden absolute-layout' : ''}`}>
+            <div className="envelope" onClick={() => setRevealed(true)}>
+              <div className="emoji-huge">💌</div>
+              <h2 className="title-medium">
+                A Letter For You
+              </h2>
+              <p className="subtitle">Tap to open</p>
+            </div>
+          </div>
+
+          {/* Back - Letter content */}
+          <div className={`letter-back ${revealed ? 'relative-layout' : 'hidden'}`}>
+            <div className="letter-content">
+              <div className="emoji-large">💖</div>
+              <div className="letter-text">
+                {letter}
+              </div>
+
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onNext}
+                className="btn-primary"
+              >
+                I Love You Too! 💕
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+// 🎯 Final Interactive Page
+const FinalPage = () => {
+  const [hearts, setHearts] = useState([]);
+  const [clicks, setClicks] = useState(0);
+
+  const addHeart = (e) => {
+    const heart = {
+      id: Date.now(),
+      x: e.clientX,
+      y: e.clientY
+    };
+    setHearts(prev => [...prev, heart]);
+    setClicks(prev => prev + 1);
+    setTimeout(() => {
+      setHearts(prev => prev.filter(h => h.id !== heart.id));
+    }, 2000);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="page-container interactive-page"
+      onClick={addHeart}
+    >
+      <div className="content-center">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 5, -5, 0]
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="emoji-huge"
+        >
+          {clicks > 50 ? '👫' : clicks > 30 ? '💑' : clicks > 10 ? '🥰' : '💝'}
+        </motion.div>
+
+        <h1 className="title-hero">
+          You + Me = Forever
+        </h1>
+
+        <p className="text-large">
+          {clicks > 50 ? "Okay okay, I get it! You love me too! 😂💕" :
+            clicks > 30 ? "Aww, someone's feeling lovey-dovey! 🥰" :
+              clicks > 10 ? "Keep clicking if you love me! 💖" :
+                "Click anywhere to spread the love! ✨"}
+        </p>
+
+        <div className="love-counter glass">
+          <p className="counter-text">
+            Love Clicks: <span className="counter-number">{clicks}</span> 💕
+          </p>
         </div>
       </div>
 
-      <motion.button
-        className="next-button"
-        onClick={onNext}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isTyping ? 0 : 1 }}
-        style={{ pointerEvents: isTyping ? 'none' : 'auto' }}
-      >
-        Continue <span>&rarr;</span>
-      </motion.button>
+      {/* Floating hearts on click */}
+      {hearts.map(heart => (
+        <motion.div
+          key={heart.id}
+          initial={{
+            x: heart.x - 16,
+            y: heart.y - 16,
+            scale: 0,
+            opacity: 1
+          }}
+          animate={{
+            y: heart.y - 150,
+            scale: [0, 1.5, 1],
+            opacity: [1, 1, 0]
+          }}
+          transition={{ duration: 2 }}
+          className="floating-heart"
+          style={{ left: 0, top: 0 }}
+        >
+          💖
+        </motion.div>
+      ))}
     </motion.div>
   );
 };
 
-// ❤️ NEW: Floating heart effect component
-const FloatingHeart = ({ id }) => (
-  <motion.div
-    key={id}
-    initial={{ opacity: 1, y: 0, scale: 0.5 }}
-    animate={{ opacity: 0, y: -60, scale: 1 }}
-    transition={{ duration: 1 }}
-    style={{
-      position: "absolute",
-      left: Math.random() * 40 + "%",
-      top: -10,
-      fontSize: "1.5rem",
-      pointerEvents: "none"
-    }}
-  >
-    💖
-  </motion.div>
-);
-
-const ProposalPage = ({ onAccept, noBtnPos, moveNoBtn, yesScale, shake }) => (
-  <motion.div
-    className="glass-card proposal-card"
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.9 }}
-    transition={{ duration: 0.8 }}
-  >
-    <motion.div
-      className="card-header"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3 }}
-    >
-      <span className="subtitle">One Last Question...</span>
-    </motion.div>
-
-    <motion.h1
-      className="recipient-name"
-      animate={{
-        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-      }}
-      transition={{
-        duration: 5,
-        repeat: Infinity,
-        ease: "linear"
-      }}
-    >
-      Zainab
-    </motion.h1>
-
-    <div className="main-question">
-      <motion.div
-        className="question-text"
-        animate={{
-          textShadow: [
-            "0 0 20px rgba(255, 107, 157, 0.2)",
-            "0 0 40px rgba(255, 107, 157, 0.5)",
-            "0 0 20px rgba(255, 107, 157, 0.2)"
-          ]
-        }}
-        transition={{ duration: 3, repeat: Infinity }}
-      >
-        Be My Valentine?
-      </motion.div>
-    </div>
-
-    <div className="action-buttons">
-
-      {/* ❤️ YES BUTTON WITH SHAKE + PULSE + GROW */}
-      <motion.button
-        className="yes-button"
-        onClick={onAccept}
-
-        animate={{
-          scale: yesScale,
-          rotate: shake ? [0, -5, 5, -5, 5, 0] : 0, // NEW SHAKE ANIMATION
-        }}
-        transition={{ duration: 0.3 }}
-
-        whileHover={{ scale: yesScale * 1.1 }}
-        whileTap={{ scale: yesScale * 0.95 }}
-      >
-        Yes, I Will! 💖
-      </motion.button>
-
-      <motion.button
-        className="no-button"
-        animate={{ x: noBtnPos.x, y: noBtnPos.y }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        onMouseEnter={moveNoBtn}
-        onClick={moveNoBtn}
-        whileTap={{ scale: 0.9 }}
-      >
-        No 😅
-      </motion.button>
-    </div>
-  </motion.div>
-);
-
+// 🎨 Main App
 function App() {
+  const [unlocked, setUnlocked] = useState(false);
   const [step, setStep] = useState(0);
-  const [accepted, setAccepted] = useState(false);
 
-  const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
-
-  const [yesScale, setYesScale] = useState(1);  // YES grows slowly
-  const [shake, setShake] = useState(false);     // YES shakes
-  const [hearts, setHearts] = useState([]);      // YES pops hearts
-
-  const moveNoButton = () => {
-    const x = Math.random() * 200 - 100;
-    const y = Math.random() * 200 - 100;
-    setNoButtonPos({ x, y });
-
-    // YES grows slowly
-    setYesScale(prev => Math.min(prev + 0.1, 2));
-
-    // YES shakes briefly
-    setShake(true);
-    setTimeout(() => setShake(false), 300);
-
-    // Pop a heart
-    const id = Math.random();
-    setHearts(prev => [...prev, id]);
-
-    // Remove heart after animation
-    setTimeout(() => {
-      setHearts(prev => prev.filter(h => h !== id));
-    }, 1000);
-  };
-
-  const handleNext = () => setStep(prev => prev + 1);
-
-  const affirmationData = {
-    title: "Hi Ashabi...",
-    content: "You are smart, beautiful, and kinda weird (but in a good way). You make even the ordinary days feel extraordinary. That's true love right there.",
-    emoji: "🌸"
-  };
-
-  const letterData = {
-    title: "Dear Monisola,",
-    content: "  Been thinking about how lucky I am to have you around.\nYour laugh, your little quirks, and yes… even the way you annoy me constantly — somehow, it all makes me adore you even more.\nI love our silly jokes, our random adventures, and even the playful chaos you bring.\nYou’re my favorite human, my partner in trouble, and honestly, I can’t imagine life without you.\n\nSo, let’s keep making memories, mischief, and teasing each other forever.",
-    emoji: "💌"
-  };
+  const pages = [
+    <WelcomePage onNext={() => setStep(1)} />,
+    <HumorPage onNext={() => setStep(2)} />,
+    <AffirmationPage onNext={() => setStep(3)} />,
+    <LoveLetterPage onNext={() => setStep(4)} />,
+    <FinalPage />
+  ];
 
   return (
     <div className="app-container">
-      <div className="gradient-bg"></div>
       <FloatingBackground />
 
-      {/* Floating hearts */}
-      {hearts.map(id => <FloatingHeart key={id} id={id} />)}
-
       <AnimatePresence mode="wait">
-        {!accepted ? (
-          <>
-            {step === 0 && (
-              <MessagePage
-                key="step-0"
-                title={affirmationData.title}
-                content={affirmationData.content}
-                emoji={affirmationData.emoji}
-                onNext={handleNext}
-              />
-            )}
-
-            {step === 1 && (
-              <TypewriterLetterPage
-                key="step-1"
-                title={letterData.title}
-                content={letterData.content}
-                emoji={letterData.emoji}
-                onNext={handleNext}
-              />
-            )}
-
-            {step === 2 && (
-              <ProposalPage
-                key="proposal"
-                onAccept={() => setAccepted(true)}
-                noBtnPos={noButtonPos}
-                moveNoBtn={moveNoButton}
-                yesScale={yesScale}
-                shake={shake}
-              />
-            )}
-          </>
+        {!unlocked ? (
+          <PasswordModal onUnlock={() => setUnlocked(true)} />
         ) : (
-          <SuccessView key="success" />
+          <motion.div
+            key={step}
+            className="page-wrapper"
+          >
+            {pages[step]}
+          </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Navigation dots */}
+      {unlocked && (
+        <div className="nav-dots">
+          {pages.map((_, i) => (
+            <motion.button
+              key={i}
+              whileHover={{ scale: 1.2 }}
+              onClick={() => setStep(i)}
+              className={`nav-dot ${i === step ? 'nav-dot-active' : ''}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
