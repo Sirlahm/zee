@@ -42,6 +42,34 @@ const PasswordModal = ({ onUnlock }) => {
   const [hint, setHint] = useState('');
 
   const SECRET_KEY = 'ashabi';
+  const [attempts, setAttempts] = useState(0);
+
+  const levelHints = [
+    "First miss… warm-up round!",
+    "Second attempt? Now we’re getting competitive 😎",
+    "You’re still wrong, but your determination is elite 💼",
+    "At this point, I’m rooting for you heavily 👀",
+    "Legend says the right password is still out there...",
+    "Nope! But I admire your confidence 😄",
+    "Close… like Lagos traffic close. Try again!",
+    "Password rejected. Don't worry, you're still awesome 😂",
+    "Almost! Okay not really, but I believe in you 💪",
+    "Plot twist: That wasn’t it. Try another one!",
+    "Nice try! But the door remains locked 🚪😌",
+
+    "The suspense is killing me… try again!",
+    "That ain’t it champ!",
+    "Password says: 'Try again, my friend.'",
+    "We move! Try another one 😄",
+    "That guess went straight to the recycle bin.",
+    "The app blinked twice — it’s confused too.",
+    "Nice attempt! Still wrong though 😂",
+    "Imagine the right answer… now type that.",
+    "So close! (In a parallel universe.)",
+    "Rejected. But with respect 🙏",
+    "I’ve seen worse guesses. But still wrong.",
+    "Error 404: Correct password not found 😉",
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +77,8 @@ const PasswordModal = ({ onUnlock }) => {
       onUnlock();
     } else {
       setShake(true);
-      setHint('Hmm... try again, baby! 😏');
+      setAttempts(attempts + 1);
+      setHint(levelHints[Math.min(attempts, levelHints.length - 1)]);
       setTimeout(() => setShake(false), 500);
       setInput('');
     }
