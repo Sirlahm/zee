@@ -111,7 +111,7 @@ const PasswordModal = ({ onUnlock }) => {
           </form>
 
           <p className="hintt">
-            Hint: It's what i call you moment of the time... 😉
+            Hint: It's what i call you most of the time... 😉
           </p>
 
         </motion.div>
