@@ -1,547 +1,680 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './App.css';
 
-// 🎨 Modern Floating Background
-const FloatingBackground = () => {
-  const shapes = ['💫', '✨', '🌟', '💝', '🦋', '🌸', '💕'];
+// 🎮 TRIVIA QUESTIONS DATABASE
+const triviaQuestions = [
+
+  {
+    id: 1,
+    question: "What's my favorite thing about you?",
+    correctAnswer: "Everything! (But especially being with you)",
+    wrongAnswers: [
+      "Your smile",
+      "How you pretend to listen to my tech rants",
+      "Your excellent taste in choosing me"
+    ],
+    emoji: "😍"
+  },
+  {
+    id: 2,
+    question: "When did we first meet?",
+    correctAnswer: "7 September 2025",
+    wrongAnswers: [
+      "14 September 2025",
+      "31 August 2025",
+      "I forgot... oops! 😅"
+    ],
+    emoji: "📅"
+  },
+  {
+    id: 3,
+    question: "What do I think about when I see you?",
+    correctAnswer: "How lucky I am",
+    wrongAnswers: [
+      "Should I just kiss her?",
+      "I wonder what she's plotting now...",
+      "How did she get even prettier?"
+    ],
+    emoji: "💭"
+  },
+
+  {
+    id: 4,
+    question: "What's our biggest achievement?",
+    correctAnswer: "Not killing each other yet 😂",
+    wrongAnswers: [
+      "Successfully surviving each other",
+      "Having a short distance relationship",
+      "Actually being this perfect"
+    ],
+    emoji: "🏆"
+  },
+  {
+    id: 5,
+    question: "How do I feel when you return calls?",
+    correctAnswer: "Like my face auto-updated to 😆 mode’ ",
+    wrongAnswers: [
+      "Here we go again 😅",
+      "Time to be charming!"
+    ],
+    emoji: "📱"
+  },
+  {
+    id: 6,
+    question: "What would I do without you?",
+    correctAnswer: "Be completely lost and lonely",
+    wrongAnswers: [
+      "Probably eat bread for every meal",
+      "Finally win arguments with myself",
+      "Have way more snacks to myself"
+    ],
+    emoji: "🤔"
+  },
+  {
+    id: 7,
+    question: "What's my favorite memory with you?",
+    correctAnswer: "All of them, even the embarrassing ones",
+    wrongAnswers: [
+      "When we got lost and blamed each other",
+      "Our first kiss"
+    ],
+    emoji: "✨"
+  },
+  {
+    id: 8,
+    question: "How would I describe you in one word?",
+    correctAnswer: "Irreplaceable",
+    wrongAnswers: [
+      "Troublemaker",
+      "Weirdo",
+      "Foodie"
+    ],
+    emoji: "📝"
+  },
+  {
+    id: 9,
+    question: "When was our first kiss?",
+    correctAnswer: "December 29, 2025",
+    wrongAnswers: [
+      "February 30th (The day that doesn't exist)",
+      "December 26, 2025",
+      "Every day feels like the first! 😘"
+    ],
+    emoji: "💋"
+  },
+  {
+    id: 10,
+    question: "What do I love most about us?",
+    correctAnswer: "Our matching weirdness levels",
+    wrongAnswers: [
+      "That you laugh at my terrible jokes",
+      "That you love me for who I am",
+      "How we can be silly and serious together "
+    ],
+    emoji: "💕"
+  },
+
+  {
+    id: 11,
+    question: "What was the very first thing I said to you?",
+    correctAnswer: "Hey, Have been trying to talk to you",
+    wrongAnswers: [
+      "Something incredibly smooth (in my head)",
+      "I probably just stuttered a lot",
+      "I was just being nice"
+    ],
+    emoji: "💬"
+  },
+  {
+    id: 12,
+    question: "What is the most romantic thing I've ever said to you?",
+    correctAnswer: "I think about you every moment",
+    wrongAnswers: [
+      "You're okay",
+      "I love you",
+      "Make sure you dream about me"
+    ],
+    emoji: "🌹"
+  },
+  {
+    id: 13,
+    question: "What's my secret 'tell' when I'm extra happy to see you?",
+    correctAnswer: "I can't stop staring at you",
+    wrongAnswers: [
+      "I start talking way too fast",
+      "I start smiling like an idiot",
+      "I suddenly become 10x more clumsy"
+    ],
+    emoji: "😊"
+  },
+  {
+    id: 14,
+    question: "How many kids have we joked about having?",
+    correctAnswer: "Three",
+    wrongAnswers: [
+      "Two",
+      "Four",
+      "Five"
+    ],
+    emoji: "👶"
+  },
+  {
+    id: 15,
+    question: "How do I plan to propose to you (according to our jokes)?",
+    correctAnswer: "While we are dining",
+    wrongAnswers: [
+      "In front of a thousand people (yikes)",
+      "While we are sleeping",
+      "When we are having romantic moments"
+    ],
+    emoji: "💍"
+  },
+  {
+    id: 16,
+    question: "If we could spend a whole day in bed, what would we be doing?",
+    correctAnswer: "All of the above",
+    wrongAnswers: [
+      "Watching movies and eating crumbs",
+      "Sleeping for 14 hours straight",
+      "Talking, kissing, and ignoring the world"
+    ],
+    emoji: "🛌"
+  },
+  {
+    id: 17,
+    question: "What is the one thing about my physical touch? ",
+    correctAnswer: "All of the above",
+    wrongAnswers: [
+      "How much I crave hold you",
+      "That I never get tired of being close to you",
+      "How perfectly we just... fit together"
+    ],
+    emoji: "🧩"
+  },
+  {
+    id: 18,
+    question: "What is my absolute favorite place to kiss you?",
+    correctAnswer: "I'm a fan of all of them, honestly",
+    wrongAnswers: [
+      "Your cheek",
+      "The back of your neck",
+      "Your lips"
+    ],
+    emoji: "💋"
+  },
+  {
+    id: 19,
+    question: "How much do I love you on a scale of 1 to 10?",
+    correctAnswer: "The scale broke, it's too high",
+    wrongAnswers: [
+      "11 (classic answer)",
+      "9.5 (just to be annoying)",
+      "How many stars are in the sky?"
+    ],
+    emoji: "📈"
+  },
+  {
+    id: 20,
+    question: "How many times a day do I think about our future?",
+    correctAnswer: "Every time",
+    wrongAnswers: [
+      "When I have thoughts about you",
+      "Exactly 42 times",
+      "When I'm with you or talking about you"
+    ],
+    emoji: "🔮"
+  },
+  // {
+  //   id: 21,
+  //   question: "How would I describe our 'vibe' to a stranger?",
+  //   correctAnswer: "Chaos, but make it romantic",
+  //   wrongAnswers: [
+  //     "Two toddlers in adult bodies",
+  //     "A very long comedy routine",
+  //     "Surprisingly organized"
+  //   ],
+  //   emoji: "🎭"
+  // },
+];
+
+// 🎊 Confetti Component
+const Confetti = () => {
+  const colors = ['#FF6B9D', '#C44569', '#FFA502', '#FFD93D', '#6BCF7F', '#4ECDC4'];
 
   return (
-    <div className="floating-bg">
-      {Array.from({ length: 30 }).map((_, i) => (
+    <div className="confetti-container">
+      {Array.from({ length: 50 }).map((_, i) => (
         <motion.div
           key={i}
-          className="floating-shape"
+          className="confetti-piece"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: window.innerWidth / 2,
+            y: -20,
+            rotate: 0,
+            opacity: 1,
+            scale: Math.random() * 0.5 + 0.5
           }}
           animate={{
-            y: [null, -100, Math.random() * window.innerHeight],
-            x: [null, Math.random() * window.innerWidth],
-            rotate: [0, 360],
-            scale: [1, 1.2, 1],
+            x: Math.random() * window.innerWidth,
+            y: window.innerHeight + 100,
+            rotate: Math.random() * 360,
+            opacity: 0
           }}
           transition={{
-            duration: Math.random() * 20 + 15,
-            repeat: Infinity,
-            ease: "linear"
+            duration: Math.random() * 2 + 2,
+            ease: "easeOut",
+            delay: Math.random() * 0.3
           }}
-        >
-          {shapes[Math.floor(Math.random() * shapes.length)]}
-        </motion.div>
+          style={{
+            background: colors[Math.floor(Math.random() * colors.length)]
+          }}
+        />
       ))}
     </div>
   );
 };
 
-// 🔐 Password Modal
-const PasswordModal = ({ onUnlock }) => {
-  const [input, setInput] = useState('');
+// 🔐 Password Screen
+const PasswordScreen = ({ onUnlock }) => {
+  const [password, setPassword] = useState('');
   const [shake, setShake] = useState(false);
   const [hint, setHint] = useState('');
 
-  const SECRET_KEY = 'ashabi';
-  const [attempts, setAttempts] = useState(0);
-
-  const levelHints = [
-    "First miss… warm-up round!",
-    "Second attempt? Now we’re getting competitive 😎",
-    "You’re still wrong, but your determination is elite 💼",
-    "At this point, I’m rooting for you heavily 👀",
-    "Legend says the right password is still out there...",
-    "Nope! But I admire your confidence 😄",
-    "Close… like Lagos traffic close. Try again!",
-    "Password rejected. Don't worry, you're still awesome 😂",
-    "Almost! Okay not really, but I believe in you 💪",
-    "Plot twist: That wasn’t it. Try another one!",
-    "Nice try! But the door remains locked 🚪😌",
-
-    "The suspense is killing me… try again!",
-    "That ain’t it champ!",
-    "Password says: 'Try again, my friend.'",
-    "We move! Try another one 😄",
-    "That guess went straight to the recycle bin.",
-    "The app blinked twice — it’s confused too.",
-    "Nice attempt! Still wrong though 😂",
-    "Imagine the right answer… now type that.",
-    "So close! (In a parallel universe.)",
-    "Rejected. But with respect 🙏",
-    "I’ve seen worse guesses. But still wrong.",
-    "Error 404: Correct password not found 😉",
-  ];
+  const SECRET_PASSWORD = 'ashabi'; // Change this!
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (input.toLowerCase() === SECRET_KEY) {
+    if (password.toLowerCase() === SECRET_PASSWORD) {
       onUnlock();
     } else {
       setShake(true);
-      setAttempts(attempts + 1);
-      setHint(levelHints[Math.min(attempts, levelHints.length - 1)]);
+      setHint("Nope! Try again, babe 😜");
       setTimeout(() => setShake(false), 500);
-      setInput('');
+      setPassword('');
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="password-modal"
-    >
-      <FloatingBackground />
+    <div className="password-screen">
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="password-card glass"
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: "spring", duration: 0.8 }}
+        className="password-box"
       >
         <motion.div
-          animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
-          transition={{ duration: 0.4 }}
+          animate={shake ? { x: [-20, 20, -20, 20, 0] } : {}}
+          transition={{ duration: 0.5 }}
         >
-          <div className="emoji-large">🔐</div>
-          <h2 className="title-large">
-            For Your Eyes Only
-          </h2>
-          <p className="subtitle">
-            Enter a keyword, beautiful 💕
-          </p>
+          <div className="game-show-emoji">🎮</div>
+          <h1 className="password-title">The Zee Trivia Show!</h1>
+          <p className="password-subtitle">Enter the secret password to play</p>
 
           <form onSubmit={handleSubmit} className="password-form">
             <input
               type="password"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type the magic words..."
-              className="password-input glass"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Secret password..."
+              className="password-input"
               autoFocus
             />
-
-            {hint && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="hint-text text-red-500"
-              >
-                {hint}
-              </motion.p>
-            )}
-
+            {hint && <p className="password-hint">{hint}</p>}
             <motion.button
+              type="submit"
+              className="password-btn"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              type="submit"
-              className="btn-primary"
             >
-              Unlock 💖
+              Let's Play! 🎯
             </motion.button>
           </form>
 
-          <p className="hintt">
-            Hint: It's what i call you most of the time... 😉
-          </p>
-
+          <p className="password-footer">Hint: It's what we're about to do! 😉</p>
         </motion.div>
       </motion.div>
-    </motion.div>
-  );
-};
-
-// 🌟 Welcome Page
-const WelcomePage = ({ onNext }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -50 }}
-    className="page-container"
-  >
-    <div className="content-center">
-      <motion.div
-        animate={{
-          rotate: [0, 10, -10, 0],
-          scale: [1, 1.1, 1]
-        }}
-        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-        className="emoji-huge"
-      >
-        👑
-      </motion.div>
-      <h1 className="title-hero">
-        Hello, My Queen
-      </h1>
-      <p className="text-large">
-        Welcome to your personal space of love, laughs, and everything in between ✨
-      </p>
-      <motion.button
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={onNext}
-        className="btn-secondary"
-      >
-        Let's Go! 💕
-      </motion.button>
     </div>
-  </motion.div>
-);
-
-// 😂 Humor Page
-const HumorPage = ({ onNext }) => {
-  const jokes = [
-    {
-      setup: "Why did I fall for you?",
-      punchline: "Because you're literally impossible to ignore! Like a notification I actually want to check 😂",
-      emoji: "🤣"
-    },
-    {
-      setup: "What do you and coffee have in common?",
-      punchline: "You both keep me awake at night... but you're way cuter and less caffeinated! ☕",
-      emoji: "😴"
-    },
-    {
-      setup: "Know what's crazy?",
-      punchline: "I love you even when you piss the hell out of me. That's TRUE love right there! 🛏️",
-      emoji: "😤"
-    }
-  ];
-
-  const [currentJoke, setCurrentJoke] = useState(0);
-  const [showPunchline, setShowPunchline] = useState(false);
-
-  const nextJoke = () => {
-    if (currentJoke < jokes.length - 1) {
-      setShowPunchline(false);
-      setTimeout(() => setCurrentJoke(prev => prev + 1), 300);
-    } else {
-      onNext();
-    }
-  };
-
-  const joke = jokes[currentJoke];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      className="page-container"
-    >
-      <div className="card glass">
-        <motion.div
-          key={currentJoke}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="card-content"
-        >
-          <div className="emoji-large">{joke.emoji}</div>
-          <h2 className="title-medium">
-            {joke.setup}
-          </h2>
-
-          <AnimatePresence>
-            {showPunchline && (
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-medium punchline"
-              >
-                {joke.punchline}
-              </motion.p>
-            )}
-          </AnimatePresence>
-
-          {!showPunchline ? (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowPunchline(true)}
-              className="btn-accent"
-            >
-              Tell Me! 😆
-            </motion.button>
-          ) : (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={nextJoke}
-              className="btn-secondary"
-            >
-              {currentJoke < jokes.length - 1 ? "Next One! 😂" : "Continue →"}
-            </motion.button>
-          )}
-
-          <div className="progress-dots">
-            {jokes.map((_, i) => (
-              <div
-                key={i}
-                className={`dot ${i === currentJoke ? 'dot-active' : ''}`}
-              />
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
   );
 };
 
-// 💝 Affirmation Page
-const AffirmationPage = ({ onNext }) => {
-  const affirmations = [
-    "You light up my world like nobody else 🌟",
-    "Your voice is my favorite notification 😊",
-    "You're the plot twist I never saw coming... and the best part of my story 📖",
-    "Decent, gorgeous, and hilariously weird = Perfect combo! 🎯",
-
-  ];
-
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % affirmations.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
-
+// 🎬 Welcome Screen
+const WelcomeScreen = ({ onStart }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="page-container"
+      className="welcome-screen"
     >
-      <div className="content-center-wide">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="emoji-huge"
-        >
-          💖
-        </motion.div>
-
-        <h2 className="title-large">
-          Just So You Know...
-        </h2>
-
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={current}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="affirmation-text"
-          >
-            "{affirmations[current]}"
-          </motion.p>
-        </AnimatePresence>
-
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onNext}
-          className="btn-primary"
-        >
-          You're Making Me Blush! 😊
-        </motion.button>
-      </div>
-    </motion.div>
-  );
-};
-
-// 💌 Love Letter Page
-const LoveLetterPage = ({ onNext }) => {
-  const [revealed, setRevealed] = useState(false);
-
-  const letter = `My Dearest Zee,
-
-I know I can be silly, annoying, and sometimes disturb you with calls throughout the day... but somehow you still choose to keep me around. That's either true love or temporary insanity, and I'm hoping it's the first one! 😂
-
-You make the boring stuff fun.  You laugh at my terrible jokes (or at least pretend to). You're my best friend, my partner in crime, and the person I want to annoy for the rest of my life.
-
-Thanks for being YOU - perfectly imperfect, wonderfully weird, and absolutely mine.
-
-Forever and always,
-Your Favorite Weirdo 💕`;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="page-container"
-    >
-      <div className="letter-container">
-        <motion.div
-          initial={{ rotateY: 0 }}
-          animate={{ rotateY: revealed ? 180 : 0 }}
-          transition={{ duration: 0.6 }}
-          className="letter-flip"
-        >
-          {/* Front of envelope */}
-          <div className={`letter-front ${revealed ? 'hidden absolute-layout' : ''}`}>
-            <div className="envelope" onClick={() => setRevealed(true)}>
-              <div className="emoji-huge">💌</div>
-              <h2 className="title-medium">
-                A Letter For You
-              </h2>
-              <p className="subtitle">Tap to open</p>
-            </div>
-          </div>
-
-          {/* Back - Letter content */}
-          <div className={`letter-back ${revealed ? 'relative-layout' : 'hidden'}`}>
-            <div className="letter-content">
-              <div className="emoji-large">💖</div>
-              <div className="letter-text">
-                {letter}
-              </div>
-
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onNext}
-                className="btn-primary"
-              >
-                I Love You Too! 💕
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-};
-
-// 🎯 Final Interactive Page
-const FinalPage = () => {
-  const [hearts, setHearts] = useState([]);
-  const [clicks, setClicks] = useState(0);
-
-  const addHeart = (e) => {
-    const heart = {
-      id: Date.now(),
-      x: e.clientX,
-      y: e.clientY
-    };
-    setHearts(prev => [...prev, heart]);
-    setClicks(prev => prev + 1);
-    setTimeout(() => {
-      setHearts(prev => prev.filter(h => h.id !== heart.id));
-    }, 2000);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="page-container interactive-page"
-      onClick={addHeart}
-    >
-      <div className="content-center">
+      <motion.div
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3, type: "spring" }}
+        className="welcome-content"
+      >
         <motion.div
           animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 5, -5, 0]
+            rotate: [0, 10, -10, 0],
+            scale: [1, 1.1, 1]
           }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="emoji-huge"
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+          className="welcome-emoji"
         >
-          {clicks > 50 ? '👫' : clicks > 30 ? '💑' : clicks > 10 ? '🥰' : '💝'}
+          🎪
         </motion.div>
 
-        <h1 className="title-hero">
-          You + Me = Forever
+        <h1 className="welcome-title">
+          Welcome to<br />
+          <span className="gradient-text">The Trivia Show!</span>
         </h1>
 
-        <p className="text-large">
-          {clicks > 50 ? "Okay okay, I get it! You love me too! 😂💕" :
-            clicks > 30 ? "Aww, someone's feeling lovey-dovey! 🥰" :
-              clicks > 10 ? "Keep clicking if you love me! 💖" :
-                "Click anywhere to spread the love! ✨"}
+        <p className="welcome-description">
+          Think you know us well? Let's test that! 😏<br />
+          Answer questions about us and rack up points!
         </p>
 
-        <div className="love-counter glass">
-          <p className="counter-text">
-            Love Clicks: <span className="counter-number">{clicks}</span> 💕
-          </p>
+        <div className="welcome-rules">
+          <div className="rule-item">
+            <span className="rule-emoji">✅</span>
+            <span>Correct answers = 10 points + confetti!</span>
+          </div>
+          <div className="rule-item">
+            <span className="rule-emoji">❌</span>
+            <span>Wrong answers = 0 points (but still fun!)</span>
+          </div>
+          <div className="rule-item">
+            <span className="rule-emoji">🎉</span>
+            <span>Every answer unlocks something sweet!</span>
+          </div>
+        </div>
+
+        <motion.button
+          onClick={onStart}
+          className="start-btn"
+          whileHover={{ scale: 1.1, rotate: 2 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Start the Show! 🚀
+        </motion.button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// 🎯 Question Screen
+const QuestionScreen = ({ question, onAnswer, questionNumber, totalQuestions }) => {
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const [allAnswers] = useState(() =>
+    [question.correctAnswer, ...question.wrongAnswers].sort(() => Math.random() - 0.5)
+  );
+
+  const handleAnswerClick = (answer) => {
+    if (showResult) return;
+
+    setSelectedAnswer(answer);
+    setShowResult(true);
+
+    if (answer === question.correctAnswer) {
+      setShowConfetti(true);
+      setTimeout(() => {
+        onAnswer(true);
+        setShowConfetti(false);
+      }, 2000);
+    } else {
+      setTimeout(() => {
+        onAnswer(false);
+      }, 2000);
+    }
+  };
+
+  const isCorrect = selectedAnswer === question.correctAnswer;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      className="question-screen"
+    >
+      {showConfetti && <Confetti />}
+
+      <div className="question-header">
+        <div className="question-number">
+          Question {questionNumber} of {totalQuestions}
+        </div>
+        <div className="question-emoji">{question.emoji}</div>
+      </div>
+
+      <motion.h2
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="question-text"
+      >
+        {question.question}
+      </motion.h2>
+
+      <div className="answers-grid">
+        {allAnswers.map((answer, index) => {
+          const isSelected = selectedAnswer === answer;
+          const isCorrectAnswer = answer === question.correctAnswer;
+
+          let answerClass = 'answer-card';
+          if (showResult && isCorrectAnswer) {
+            answerClass += ' answer-correct';
+          } else if (showResult && isSelected && !isCorrectAnswer) {
+            answerClass += ' answer-wrong';
+          } else if (isSelected) {
+            answerClass += ' answer-selected';
+          }
+
+          return (
+            <motion.button
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + index * 0.1 }}
+              onClick={() => handleAnswerClick(answer)}
+              className={answerClass}
+              disabled={showResult}
+              whileHover={!showResult ? { scale: 1.03, y: -5 } : {}}
+              whileTap={!showResult ? { scale: 0.97 } : {}}
+            >
+              <span className="answer-letter">{String.fromCharCode(65 + index)}</span>
+              <span className="answer-text">{answer}</span>
+              {showResult && isCorrectAnswer && <span className="answer-icon">✓</span>}
+              {showResult && isSelected && !isCorrectAnswer && <span className="answer-icon">✗</span>}
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {showResult && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`result-message ${isCorrect ? 'result-correct' : 'result-wrong'}`}
+        >
+          {isCorrect ? (
+            <>
+              <span className="result-emoji">🎉</span>
+              <span>YES! You know me so well! +10 points!</span>
+            </>
+          ) : (
+            <>
+              <span className="result-emoji">😅</span>
+              <span>Oops! But I still love you!</span>
+            </>
+          )}
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+// 🏆 Results Screen
+const ResultsScreen = ({ score, totalQuestions, onRestart }) => {
+  const percentage = Math.round((score / (totalQuestions * 10)) * 100);
+
+  let message, emoji, grade;
+  if (percentage >= 90) {
+    message = "WOW! You're basically a certified expert on me! 🏆";
+    emoji = "👑";
+    grade = "A+";
+  } else if (percentage >= 70) {
+    message = "You're on fire! You know us so well! 💗";
+    emoji = "🌟";
+    grade = "A";
+  } else if (percentage >= 50) {
+    message = "Not bad! But we need more quality time 😉";
+    emoji = "💕";
+    grade = "B";
+  } else {
+    message = "Aww, we need to talk more! Still love you though! 😂";
+    emoji = "💝";
+    grade = "C";
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="results-screen"
+    >
+      <Confetti />
+
+      <motion.div
+        initial={{ rotate: -180, scale: 0 }}
+        animate={{ rotate: 0, scale: 1 }}
+        transition={{ type: "spring", delay: 0.3 }}
+        className="results-emoji"
+      >
+        {emoji}
+      </motion.div>
+
+      <h1 className="results-title">Game Over!</h1>
+
+      <div className="results-grade">{grade}</div>
+
+      <div className="results-score">
+        <div className="score-label">Final Score</div>
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", delay: 0.5 }}
+          className="score-value"
+        >
+          {score}
+        </motion.div>
+        <div className="score-total">out of {totalQuestions * 10} points</div>
+      </div>
+
+      <div className="results-percentage">{percentage}% Correct!</div>
+
+      <p className="results-message">{message}</p>
+
+      <div className="results-breakdown">
+        <div className="breakdown-item">
+          <span className="breakdown-label">Questions</span>
+          <span className="breakdown-value">{totalQuestions}</span>
+        </div>
+        <div className="breakdown-item">
+          <span className="breakdown-label">Correct</span>
+          <span className="breakdown-value">{score / 10}</span>
+        </div>
+        <div className="breakdown-item">
+          <span className="breakdown-label">Wrong</span>
+          <span className="breakdown-value">{totalQuestions - (score / 10)}</span>
         </div>
       </div>
 
-      {/* Floating hearts on click */}
-      {hearts.map(heart => (
-        <motion.div
-          key={heart.id}
-          initial={{
-            x: heart.x - 16,
-            y: heart.y - 16,
-            scale: 0,
-            opacity: 1
-          }}
-          animate={{
-            y: heart.y - 150,
-            scale: [0, 1.5, 1],
-            opacity: [1, 1, 0]
-          }}
-          transition={{ duration: 2 }}
-          className="floating-heart"
-          style={{ left: 0, top: 0 }}
-        >
-          💖
-        </motion.div>
-      ))}
+      <motion.button
+        onClick={onRestart}
+        className="restart-btn"
+        whileHover={{ scale: 1.1, rotate: 2 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Play Again! 🔄
+      </motion.button>
     </motion.div>
   );
 };
 
-// 🎨 Main App
+// 🎮 Main App
 function App() {
   const [unlocked, setUnlocked] = useState(false);
-  const [step, setStep] = useState(0);
+  const [gameState, setGameState] = useState('welcome'); // welcome, playing, results
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [questions, setQuestions] = useState([]);
 
-  const pages = [
-    <WelcomePage onNext={() => setStep(1)} />,
-    <HumorPage onNext={() => setStep(2)} />,
-    <AffirmationPage onNext={() => setStep(3)} />,
-    <LoveLetterPage onNext={() => setStep(4)} />,
-    <FinalPage />
-  ];
+  const startGame = () => {
+    const shuffled = [...triviaQuestions].sort(() => Math.random() - 0.5);
+    setQuestions(shuffled);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setGameState('playing');
+  };
+
+  const handleAnswer = (isCorrect) => {
+    if (isCorrect) {
+      setScore(prev => prev + 10);
+    }
+
+    if (currentQuestionIndex < questions.length - 1) {
+      setTimeout(() => {
+        setCurrentQuestionIndex(prev => prev + 1);
+      }, 100);
+    } else {
+      setTimeout(() => {
+        setGameState('results');
+      }, 100);
+    }
+  };
+
+  const restartGame = () => {
+    setGameState('welcome');
+  };
 
   return (
-    <div className="app-container">
-      <FloatingBackground />
-
+    <div className="trivia-app">
       <AnimatePresence mode="wait">
         {!unlocked ? (
-          <PasswordModal onUnlock={() => setUnlocked(true)} />
+          <PasswordScreen key="password" onUnlock={() => setUnlocked(true)} />
+        ) : gameState === 'welcome' ? (
+          <WelcomeScreen key="welcome" onStart={startGame} />
+        ) : gameState === 'playing' ? (
+          <QuestionScreen
+            key={currentQuestionIndex}
+            question={questions[currentQuestionIndex]}
+            onAnswer={handleAnswer}
+            questionNumber={currentQuestionIndex + 1}
+            totalQuestions={questions.length}
+          />
         ) : (
-          <motion.div
-            key={step}
-            className="page-wrapper"
-          >
-            {pages[step]}
-          </motion.div>
+          <ResultsScreen
+            key="results"
+            score={score}
+            totalQuestions={questions.length}
+            onRestart={restartGame}
+          />
         )}
       </AnimatePresence>
 
-      {/* Navigation dots */}
-      {unlocked && (
-        <div className="nav-dots">
-          {pages.map((_, i) => (
-            <motion.button
-              key={i}
-              whileHover={{ scale: 1.2 }}
-              onClick={() => setStep(i)}
-              className={`nav-dot ${i === step ? 'nav-dot-active' : ''}`}
-            />
-          ))}
-        </div>
+      {/* Floating Score Display (only during game) */}
+      {unlocked && gameState === 'playing' && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="floating-score"
+        >
+          <span className="score-icon">🏆</span>
+          <span className="score-text">{score} pts</span>
+        </motion.div>
       )}
     </div>
   );
