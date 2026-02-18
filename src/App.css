@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap');
 
 * {
   margin: 0;
@@ -6,13 +6,23 @@
   box-sizing: border-box;
 }
 
+:root {
+  --emerald: #059669;
+  --emerald-dark: #047857;
+  --emerald-light: #10b981;
+  --gold: #D4AF37;
+  --gold-light: #F4E4A6;
+  --cream: #FAF8F3;
+  --dark: #1F2937;
+  --gray: #6B7280;
+}
+
 body {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Tajawal', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  background: var(--cream);
 }
 
 #root {
@@ -22,544 +32,378 @@ body {
 /* ============================================
    MAIN APP CONTAINER
    ============================================ */
-/* ============================================
-   MAIN APP CONTAINER
-   ============================================ */
-.app-container {
+.ramadan-app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ff6b6b 100%);
-  overflow-x: hidden;
-  /* Allow vertical scroll */
+  background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 50%, #FFF9C4 100%);
   position: relative;
 }
 
-/* ... existing code ... */
-
-.letter-back.hidden {
-  opacity: 0;
-}
-
-/* Layout utilities for flip card state */
-.letter-front.absolute-layout {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-}
-
-.letter-back.relative-layout {
-  position: relative;
-  inset: auto;
-}
-
-/* ============================================
-   FLOATING BACKGROUND
-   ============================================ */
-.floating-bg {
+/* Islamic geometric pattern overlay */
+.ramadan-app::before {
+  content: '';
   position: fixed;
-  inset: 0;
-  overflow: hidden;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(5, 150, 105, 0.02) 35px, rgba(5, 150, 105, 0.02) 70px),
+    repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(212, 175, 55, 0.02) 35px, rgba(212, 175, 55, 0.02) 70px);
   pointer-events: none;
   z-index: 0;
 }
 
-.floating-shape {
-  position: absolute;
-  font-size: 2rem;
-  opacity: 0.2;
-}
-
 /* ============================================
-   PAGE LAYOUTS
+   PASSWORD SCREEN
    ============================================ */
-.page-container {
+.password-screen {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-}
-
-.page-wrapper {
+  padding: 2rem;
   position: relative;
-  z-index: 10;
-}
-
-.content-center {
-  text-align: center;
-  max-width: 42rem;
-  width: 100%;
-}
-
-.content-center-wide {
-  text-align: center;
-  max-width: 48rem;
-  width: 100%;
-}
-
-/* ============================================
-   PASSWORD MODAL
-   ============================================ */
-.password-modal {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #4f46e5 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
+  z-index: 1;
 }
 
 .password-card {
-  position: relative;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 1.5rem;
+  background: white;
+  border-radius: 2rem;
   padding: 3rem 2rem;
-  max-width: 28rem;
+  max-width: 450px;
   width: 100%;
-  margin: 0 1rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 20px 60px rgba(5, 150, 105, 0.15),
+    0 0 0 1px rgba(5, 150, 105, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.islamic-pattern-top,
+.islamic-pattern-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(90deg, var(--emerald) 0%, var(--emerald-light) 50%, var(--emerald) 100%);
+  opacity: 0.1;
+}
+
+.islamic-pattern-top {
+  top: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 80% 70%, 70% 100%, 60% 70%, 50% 100%, 40% 70%, 30% 100%, 20% 70%, 10% 100%, 0 70%);
+}
+
+.islamic-pattern-bottom {
+  bottom: 0;
+  clip-path: polygon(0 30%, 10% 0, 20% 30%, 30% 0, 40% 30%, 50% 0, 60% 30%, 70% 0, 80% 30%, 90% 0, 100% 30%, 100% 100%, 0 100%);
+}
+
+.crescent-icon {
+  font-size: 4rem;
+  margin: 1rem 0;
+  animation: glow 3s ease infinite;
+}
+
+@keyframes glow {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6));
+  }
+}
+
+.password-title {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: var(--emerald-dark);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.password-subtitle {
+  font-family: 'Amiri', serif;
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 2rem;
 }
 
 .password-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .password-input {
   width: 100%;
   padding: 1rem 1.5rem;
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  font-size: 1.125rem;
+  border: 2px solid var(--emerald-light);
+  font-size: 1rem;
+  font-family: 'Tajawal', sans-serif;
   outline: none;
   transition: all 0.3s ease;
-}
-
-.password-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  background: white;
 }
 
 .password-input:focus {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.02);
+  border-color: var(--emerald);
+  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
 }
 
-/* ============================================
-   CARDS
-   ============================================ */
-.card {
-  max-width: 42rem;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 2rem;
-  padding: 3rem 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+.password-error {
+  color: #DC2626;
+  font-size: 0.9rem;
+  animation: shake 0.5s ease;
 }
 
-.card-content {
-  text-align: center;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* ============================================
-   TYPOGRAPHY
-   ============================================ */
-.title-hero {
-  font-size: clamp(2.5rem, 5vw, 3.75rem);
-  font-weight: 700;
-  color: white;
-  margin-bottom: 1rem;
-  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.title-large {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
-  color: white;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.title-medium {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  color: white;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.subtitle {
-  color: rgba(255, 255, 255, 0.8);
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-}
-
-.text-large {
-  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 2rem;
-  line-height: 1.6;
-}
-
-.text-medium {
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 2rem;
-  line-height: 1.7;
-}
-
-.punchline {
-  padding: 0 1rem;
-}
-
-.hint-text {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.875rem;
-  text-align: center;
-}
-
-.hint-small {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.75rem;
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.text-red-500 {
-  color: rgb(213, 9, 9);
-  font-weight: bold;
-}
-
-.hintt {
-  color: rgb(106, 234, 106);
-  font-size: 0.75rem;
-  text-align: center;
-  margin-top: 1rem;
-  font-weight: bold;
-}
-
-/* ============================================
-   EMOJIS
-   ============================================ */
-.emoji-huge {
-  font-size: clamp(5rem, 10vw, 8rem);
-  margin-bottom: 1.5rem;
-  display: inline-block;
-}
-
-.emoji-large {
-  font-size: clamp(3.5rem, 7vw, 6rem);
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-/* ============================================
-   BUTTONS
-   ============================================ */
-.btn-primary {
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-  color: white;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.btn-primary:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  padding: 1rem 2rem;
-  background: white;
-  color: #8b5cf6;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-  box-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
-  transform: translateY(-2px);
-}
-
-.btn-accent {
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #facc15 0%, #f97316 100%);
-  color: white;
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 1.125rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-accent:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-/* ============================================
-   PROGRESS DOTS
-   ============================================ */
-.progress-dots {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-}
-
-.dot {
-  height: 0.5rem;
-  width: 0.5rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.4);
-  transition: all 0.3s ease;
-}
-
-.dot-active {
-  width: 2rem;
-  background: white;
-}
-
-/* ============================================
-   NAVIGATION DOTS
-   ============================================ */
-.nav-dots {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.5rem;
-  z-index: 20;
-}
-
-.nav-dot {
-  height: 0.75rem;
-  width: 0.75rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.4);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
-}
-
-.nav-dot:hover {
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.nav-dot-active {
-  width: 2rem;
-  background: white;
-}
-
-/* ============================================
-   AFFIRMATION TEXT
-   ============================================ */
-.affirmation-text {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  color: white;
-  font-weight: 300;
-  margin-bottom: 3rem;
-  padding: 0 1rem;
-  min-height: 6rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1.5;
-}
-
-/* ============================================
-   LOVE LETTER
-   ============================================ */
-.letter-container {
-  max-width: 42rem;
-  width: 100%;
-}
-
-.letter-flip {
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-.letter-front,
-.letter-back {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.letter-front {
-  transition: opacity 0.3s ease;
-}
-
-.letter-front.hidden {
-  opacity: 0;
-}
-
-.letter-back {
-  position: absolute;
-  inset: 0;
-  transform: rotateY(180deg);
-  transition: opacity 0.3s ease;
-}
-
-.letter-back.hidden {
-  opacity: 0;
-}
-
-.envelope {
-  background: linear-gradient(135deg, #ef4444 0%, #ec4899 100%);
-  border-radius: 2rem;
-  padding: 3rem;
-  text-align: center;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.envelope:hover {
-  transform: scale(1.02);
-  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.3);
-}
-
-.letter-content {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 2rem;
-  padding: 2rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.letter-text {
-  white-space: pre-line;
-  color: #1f2937;
-  line-height: 1.8;
-  font-size: 1rem;
-  margin-bottom: 2rem;
-  text-align: left;
-}
-
-/* ============================================
-   FINAL PAGE - INTERACTIVE
-   ============================================ */
-.interactive-page {
-  cursor: pointer;
-}
-
-.love-counter {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  display: inline-block;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.counter-text {
-  color: white;
-  font-size: 1.125rem;
-  margin: 0;
-}
-
-.counter-number {
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: #fbcfe8;
-}
-
-.floating-heart {
-  position: fixed;
-  font-size: 2.5rem;
-  pointer-events: none;
-  z-index: 50;
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (min-width: 768px) {
-  .password-card {
-    padding: 3rem;
-  }
-
-  .card {
-    padding: 3rem;
-  }
-
-  .letter-content {
-    padding: 3rem;
-  }
-}
-
-/* ============================================
-   CUSTOM SCROLLBAR
-   ============================================ */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-/* ============================================
-   ANIMATIONS
-   ============================================ */
-@keyframes float {
+@keyframes shake {
 
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateX(0);
   }
 
-  50% {
-    transform: translateY(-20px);
+  25% {
+    transform: translateX(-10px);
+  }
+
+  75% {
+    transform: translateX(10px);
   }
 }
 
-@keyframes pulse {
+.password-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Tajawal', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.3);
+  transition: all 0.3s ease;
+}
+
+.password-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(5, 150, 105, 0.4);
+}
+
+/* ============================================
+   DASHBOARD
+   ============================================ */
+.dashboard {
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-header {
+  background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+  border-radius: 2rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(5, 150, 105, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.header-title {
+  font-family: 'Amiri', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: white;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-subtitle {
+  color: var(--gold-light);
+  font-size: 1.1rem;
+}
+
+.day-selector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  padding: 0.8rem 1.5rem;
+  border-radius: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.day-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.current-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.day-label {
+  color: var(--gold-light);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.day-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  font-family: 'Amiri', serif;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.tab {
+  padding: 0.8rem 1.5rem;
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  color: var(--gray);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tab:hover {
+  border-color: var(--emerald-light);
+  transform: translateY(-2px);
+}
+
+.tab-active {
+  background: var(--emerald);
+  color: white;
+  border-color: var(--emerald);
+  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.3);
+}
+
+/* ============================================
+   TAB CONTENT
+   ============================================ */
+.tab-content {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   VERSE CARD
+   ============================================ */
+.verse-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--gold);
+  text-align: center;
+}
+
+.verse-arabic {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--emerald-dark);
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  direction: rtl;
+}
+
+.verse-translation {
+  font-size: 1.1rem;
+  color: var(--dark);
+  margin-bottom: 0.8rem;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.verse-reference {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   LOVE MESSAGE CARD
+   ============================================ */
+.love-message-card {
+  background: linear-gradient(135deg, var(--emerald-light) 0%, var(--emerald) 100%);
+  border-radius: 1.5rem;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.2);
+}
+
+.heart-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  animation: heartbeat 2s ease infinite;
+}
+
+@keyframes heartbeat {
 
   0%,
   100% {
@@ -567,37 +411,755 @@ body {
   }
 
   50% {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.love-message {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.6;
 }
 
-.animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
+/* ============================================
+   PROGRESS GRID
+   ============================================ */
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.progress-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.progress-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.progress-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.progress-info {
+  flex: 1;
+}
+
+.progress-label {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.progress-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--emerald);
+  font-family: 'Amiri', serif;
+}
+
+.progress-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--dark);
+}
+
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: var(--emerald);
+}
+
+/* ============================================
+   MONTH OVERVIEW
+   ============================================ */
+.month-overview {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-family: 'Amiri', serif;
+  font-size: 1.8rem;
+  color: var(--emerald-dark);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  border-radius: 0.8rem;
+  font-weight: 600;
+  color: var(--gray);
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.calendar-day:hover {
+  transform: scale(1.05);
+}
+
+.calendar-day.completed {
+  background: var(--emerald);
+  color: white;
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+}
+
+.calendar-day.current {
+  border: 3px solid var(--gold);
+  font-weight: 700;
+}
+
+.check-mark {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 0.8rem;
+}
+
+.calendar-stats {
+  text-align: center;
+  color: var(--emerald);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   PRAYERS
+   ============================================ */
+.prayers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.prayers-stats {
+  background: var(--emerald);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-family: 'Amiri', serif;
+  font-size: 1.1rem;
+}
+
+.prayers-list {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.prayer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem;
+  border-bottom: 1px solid var(--cream);
+  transition: all 0.3s ease;
+}
+
+.prayer-item:last-child {
+  border-bottom: none;
+}
+
+.prayer-item:hover {
+  background: rgba(5, 150, 105, 0.03);
+  border-radius: 0.8rem;
+}
+
+.prayer-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.prayer-icon {
+  font-size: 2rem;
+}
+
+.prayer-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--dark);
+  margin-bottom: 0.2rem;
+}
+
+.prayer-time {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+.prayer-checkbox {
+  position: relative;
+  cursor: pointer;
+}
+
+.prayer-checkbox input {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  accent-color: var(--emerald);
+}
+
+.prayers-total {
+  background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+}
+
+.total-card {
+  color: white;
+}
+
+.total-number {
+  font-size: 4rem;
+  font-weight: 700;
+  font-family: 'Amiri', serif;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.total-label {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.total-subtitle {
+  color: var(--gold-light);
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   QURAN
+   ============================================ */
+.quran-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.quran-stats {
+  background: var(--gold);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-family: 'Amiri', serif;
+  font-size: 1.1rem;
+}
+
+.quran-progress-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle-bg {
+  stroke: var(--cream);
+  stroke-width: 12;
+  fill: transparent;
+}
+
+.progress-ring-circle {
+  stroke: var(--emerald);
+  stroke-width: 12;
+  fill: transparent;
+  stroke-dasharray: 565;
+  stroke-dashoffset: 565;
+  transition: stroke-dashoffset 0.5s ease;
+  stroke-linecap: round;
+}
+
+.progress-ring-text {
+  position: absolute;
+  text-align: center;
+}
+
+.progress-percentage {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--emerald);
+  font-family: 'Amiri', serif;
+}
+
+.progress-label {
+  color: var(--gray);
+  font-size: 1rem;
+}
+
+.juz-selector {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.juz-label {
+  display: block;
+  color: var(--dark);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.juz-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: var(--cream);
+  outline: none;
+  margin-bottom: 1rem;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.juz-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--emerald);
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+}
+
+.juz-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--emerald);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+}
+
+.juz-display {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--emerald);
+  font-family: 'Amiri', serif;
+}
+
+.quran-goal {
+  background: linear-gradient(135deg, var(--gold) 0%, #C4941F 100%);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+}
+
+.goal-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.goal-text {
+  color: white;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.goal-celebration {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.celebration-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* ============================================
+   DUAS
+   ============================================ */
+.duas-header {
+  margin-bottom: 2rem;
+}
+
+.duas-subtitle {
+  color: var(--gray);
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.dua-category {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.category-title {
+  font-family: 'Amiri', serif;
+  font-size: 1.4rem;
+  color: var(--emerald);
+  margin-bottom: 1.2rem;
+}
+
+.duas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dua-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.8rem;
+  border-radius: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.dua-item:hover {
+  background: rgba(5, 150, 105, 0.03);
+}
+
+.dua-checkbox {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.dua-checkbox input {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--emerald);
+}
+
+.dua-text {
+  flex: 1;
+  color: var(--dark);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.dua-text.checked {
+  text-decoration: line-through;
+  color: var(--gray);
+  opacity: 0.7;
+}
+
+.dua-reminder {
+  background: linear-gradient(135deg, var(--emerald-light) 0%, var(--emerald) 100%);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(5, 150, 105, 0.2);
+}
+
+.reminder-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.reminder-text {
+  color: white;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 0.8rem;
+  font-style: italic;
+}
+
+.reminder-reference {
+  color: var(--gold-light);
+  font-weight: 600;
+}
+
+/* ============================================
+   GOOD DEEDS
+   ============================================ */
+.deeds-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.deeds-count {
+  background: var(--emerald);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-family: 'Amiri', serif;
+}
+
+.add-deed-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.deed-input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  border: 2px solid var(--emerald-light);
+  font-size: 1rem;
+  font-family: 'Tajawal', sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.deed-input:focus {
+  border-color: var(--emerald);
+  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+}
+
+.deed-btn {
+  padding: 1rem 2rem;
+  background: var(--emerald);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.deed-btn:hover {
+  background: var(--emerald-dark);
+  transform: translateY(-2px);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--gray);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.deeds-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.deeds-day {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.day-badge {
+  background: var(--gold);
+  color: white;
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.deeds-day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.deed-card {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  background: var(--cream);
+  border-radius: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.deed-card:hover {
+  background: rgba(5, 150, 105, 0.05);
+  transform: translateX(5px);
+}
+
+.deed-icon {
+  color: var(--emerald);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.deed-text {
+  flex: 1;
+  color: var(--dark);
+  line-height: 1.5;
+}
+
+/* ============================================
+   HADITH CARD
+   ============================================ */
+.hadith-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid var(--emerald);
+  text-align: center;
+}
+
+.hadith-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hadith-text {
+  font-family: 'Amiri', serif;
+  font-size: 1.15rem;
+  color: var(--dark);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.hadith-reference {
+  color: var(--emerald);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .day-selector {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .add-deed-form {
+    flex-direction: column;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 0.5rem;
+  }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--emerald-light);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--emerald);
 }
 
 /* ============================================
    SELECTION
    ============================================ */
 ::selection {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--emerald-light);
   color: white;
 }
 
 ::-moz-selection {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--emerald-light);
   color: white;
-}
-
-/* ============================================
-   DISABLE TEXT SELECTION ON BUTTONS
-   ============================================ */
-button {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }

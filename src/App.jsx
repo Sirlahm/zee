@@ -2,547 +2,679 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './App.css';
 
-// 🎨 Modern Floating Background
-const FloatingBackground = () => {
-  const shapes = ['💫', '✨', '🌟', '💝', '🦋', '🌸', '💕'];
+// 📿 QURANIC VERSES FOR EACH DAY
+const quranVerses = [
+  { arabic: "يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ", translation: "O you who believe! Fasting is prescribed for you", reference: "Al-Baqarah 2:183" },
+  { arabic: "شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ", translation: "The month of Ramadan in which was revealed the Quran", reference: "Al-Baqarah 2:185" },
+  { arabic: "وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ", translation: "And when My servants ask you concerning Me, indeed I am near", reference: "Al-Baqarah 2:186" },
+  { arabic: "إِنَّ اللَّهَ مَعَ الصَّابِرِينَ", translation: "Indeed, Allah is with the patient", reference: "Al-Baqarah 2:153" },
+  { arabic: "فَاذْكُرُونِي أَذْكُرْكُمْ", translation: "So remember Me; I will remember you", reference: "Al-Baqarah 2:152" },
+];
 
-  return (
-    <div className="floating-bg">
-      {Array.from({ length: 30 }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="floating-shape"
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-          }}
-          animate={{
-            y: [null, -100, Math.random() * window.innerHeight],
-            x: [null, Math.random() * window.innerWidth],
-            rotate: [0, 360],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: Math.random() * 20 + 15,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        >
-          {shapes[Math.floor(Math.random() * shapes.length)]}
-        </motion.div>
-      ))}
-    </div>
-  );
-};
+// 💕 ROMANTIC ISLAMIC MESSAGES
+const loveMessages = [
+  "May Allah bless our love and make us companions in Jannah 💚",
+  "You make my deen and dunya beautiful, Alhamdulillah 🌙",
+  "Praying for us to grow closer to Allah together ✨",
+  "May Allah accept our fasts and make us among the righteous 🤲",
+  "You're my favorite blessing this Ramadan 💝",
+  "May we break our fasts together in this life and the next, insha'Allah 🌟",
+  "Allah brought us together, and I'm forever grateful 💚",
+  "Loving you for the sake of Allah makes my heart peaceful 🕌",
+];
 
-// 🔐 Password Modal
-const PasswordModal = ({ onUnlock }) => {
-  const [input, setInput] = useState('');
-  const [shake, setShake] = useState(false);
-  const [hint, setHint] = useState('');
+// 🤲 DUA CATEGORIES
+const duaCategories = [
+  {
+    id: 1, title: "For Our Relationship", duas: [
+      "May Allah bless our bond and make it a source of peace",
+      "May Allah make us best friends and companions in Jannah",
+      "May Allah protect our love and keep us together",
+    ]
+  },
+  {
+    id: 2, title: "For Our Families", duas: [
+      "May Allah guide our parents and grant them Jannah",
+      "May Allah bless our families with health and iman",
+      "May Allah unite our families in love and harmony",
+    ]
+  },
+  {
+    id: 3, title: "For Forgiveness", duas: [
+      "May Allah forgive our sins and shortcomings",
+      "May Allah accept our repentance and good deeds",
+      "May Allah purify our hearts and intentions",
+    ]
+  },
+  {
+    id: 4, title: "For the Ummah", duas: [
+      "May Allah grant victory to the oppressed",
+      "May Allah unite the Muslim ummah",
+      "May Allah guide us all to the straight path",
+    ]
+  },
+];
 
-  const SECRET_KEY = 'ashabi';
-  const [attempts, setAttempts] = useState(0);
+// 🔐 Password Screen
+const PasswordScreen = ({ onUnlock }) => {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
 
-  const levelHints = [
-    "First miss… warm-up round!",
-    "Second attempt? Now we’re getting competitive 😎",
-    "You’re still wrong, but your determination is elite 💼",
-    "At this point, I’m rooting for you heavily 👀",
-    "Legend says the right password is still out there...",
-    "Nope! But I admire your confidence 😄",
-    "Close… like Lagos traffic close. Try again!",
-    "Password rejected. Don't worry, you're still awesome 😂",
-    "Almost! Okay not really, but I believe in you 💪",
-    "Plot twist: That wasn’t it. Try another one!",
-    "Nice try! But the door remains locked 🚪😌",
-
-    "The suspense is killing me… try again!",
-    "That ain’t it champ!",
-    "Password says: 'Try again, my friend.'",
-    "We move! Try another one 😄",
-    "That guess went straight to the recycle bin.",
-    "The app blinked twice — it’s confused too.",
-    "Nice attempt! Still wrong though 😂",
-    "Imagine the right answer… now type that.",
-    "So close! (In a parallel universe.)",
-    "Rejected. But with respect 🙏",
-    "I’ve seen worse guesses. But still wrong.",
-    "Error 404: Correct password not found 😉",
-  ];
+  const SECRET = 'ridzee'; // Change this!
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (input.toLowerCase() === SECRET_KEY) {
+    if (password.toLowerCase() === SECRET) {
       onUnlock();
     } else {
-      setShake(true);
-      setAttempts(attempts + 1);
-      setHint(levelHints[Math.min(attempts, levelHints.length - 1)]);
-      setTimeout(() => setShake(false), 500);
-      setInput('');
+      setError(true);
+      setTimeout(() => setError(false), 500);
+      setPassword('');
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="password-modal"
-    >
-      <FloatingBackground />
+    <div className="password-screen">
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="password-card glass"
+        className="password-card"
       >
         <motion.div
-          animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
-          transition={{ duration: 0.4 }}
+          animate={error ? { x: [-10, 10, -10, 10, 0] } : {}}
         >
-          <div className="emoji-large">🔐</div>
-          <h2 className="title-large">
-            For Your Eyes Only
-          </h2>
-          <p className="subtitle">
-            Enter a keyword, beautiful 💕
-          </p>
+          <div className="islamic-pattern-top"></div>
+          <div className="crescent-icon">🌙</div>
+          <h1 className="password-title">Our Blessed Ramadan</h1>
+          <p className="password-subtitle">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
 
           <form onSubmit={handleSubmit} className="password-form">
             <input
               type="password"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type the magic words..."
-              className="password-input glass"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password..."
+              className="password-input"
               autoFocus
             />
-
-            {hint && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="hint-text text-red-500"
-              >
-                {hint}
-              </motion.p>
-            )}
-
+            {error && <p className="password-error">Try again, habibi 💚</p>}
             <motion.button
+              type="submit"
+              className="password-btn"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              type="submit"
-              className="btn-primary"
             >
-              Unlock 💖
+              Begin Journey
             </motion.button>
           </form>
-
-          <p className="hintt">
-            Hint: It's what i call you most of the time... 😉
-          </p>
-
+          <div className="islamic-pattern-bottom"></div>
         </motion.div>
       </motion.div>
-    </motion.div>
-  );
-};
-
-// 🌟 Welcome Page
-const WelcomePage = ({ onNext }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -50 }}
-    className="page-container"
-  >
-    <div className="content-center">
-      <motion.div
-        animate={{
-          rotate: [0, 10, -10, 0],
-          scale: [1, 1.1, 1]
-        }}
-        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-        className="emoji-huge"
-      >
-        👑
-      </motion.div>
-      <h1 className="title-hero">
-        Hello, My Queen
-      </h1>
-      <p className="text-large">
-        Welcome to your personal space of love, laughs, and everything in between ✨
-      </p>
-      <motion.button
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={onNext}
-        className="btn-secondary"
-      >
-        Let's Go! 💕
-      </motion.button>
     </div>
-  </motion.div>
-);
-
-// 😂 Humor Page
-const HumorPage = ({ onNext }) => {
-  const jokes = [
-    {
-      setup: "Why did I fall for you?",
-      punchline: "Because you're literally impossible to ignore! Like a notification I actually want to check 😂",
-      emoji: "🤣"
-    },
-    {
-      setup: "What do you and coffee have in common?",
-      punchline: "You both keep me awake at night... but you're way cuter and less caffeinated! ☕",
-      emoji: "😴"
-    },
-    {
-      setup: "Know what's crazy?",
-      punchline: "I love you even when you piss the hell out of me. That's TRUE love right there! 🛏️",
-      emoji: "😤"
-    }
-  ];
-
-  const [currentJoke, setCurrentJoke] = useState(0);
-  const [showPunchline, setShowPunchline] = useState(false);
-
-  const nextJoke = () => {
-    if (currentJoke < jokes.length - 1) {
-      setShowPunchline(false);
-      setTimeout(() => setCurrentJoke(prev => prev + 1), 300);
-    } else {
-      onNext();
-    }
-  };
-
-  const joke = jokes[currentJoke];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      className="page-container"
-    >
-      <div className="card glass">
-        <motion.div
-          key={currentJoke}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="card-content"
-        >
-          <div className="emoji-large">{joke.emoji}</div>
-          <h2 className="title-medium">
-            {joke.setup}
-          </h2>
-
-          <AnimatePresence>
-            {showPunchline && (
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-medium punchline"
-              >
-                {joke.punchline}
-              </motion.p>
-            )}
-          </AnimatePresence>
-
-          {!showPunchline ? (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowPunchline(true)}
-              className="btn-accent"
-            >
-              Tell Me! 😆
-            </motion.button>
-          ) : (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={nextJoke}
-              className="btn-secondary"
-            >
-              {currentJoke < jokes.length - 1 ? "Next One! 😂" : "Continue →"}
-            </motion.button>
-          )}
-
-          <div className="progress-dots">
-            {jokes.map((_, i) => (
-              <div
-                key={i}
-                className={`dot ${i === currentJoke ? 'dot-active' : ''}`}
-              />
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
   );
 };
 
-// 💝 Affirmation Page
-const AffirmationPage = ({ onNext }) => {
-  const affirmations = [
-    "You light up my world like nobody else 🌟",
-    "Your voice is my favorite notification 😊",
-    "You're the plot twist I never saw coming... and the best part of my story 📖",
-    "Decent, gorgeous, and hilariously weird = Perfect combo! 🎯",
+// 🏠 Main Dashboard
+const Dashboard = () => {
+  const [activeTab, setActiveTab] = useState('overview');
+  const [ramadanDay, setRamadanDay] = useState(1);
 
-  ];
+  // Load saved data
+  const [fastingDays, setFastingDays] = useState(() => {
+    const saved = localStorage.getItem('ramadan_fasting');
+    return saved ? JSON.parse(saved) : Array(30).fill(false);
+  });
 
-  const [current, setCurrent] = useState(0);
+  const [prayers, setPrayers] = useState(() => {
+    const saved = localStorage.getItem('ramadan_prayers');
+    return saved ? JSON.parse(saved) : {
+      fajr: Array(30).fill(false),
+      dhuhr: Array(30).fill(false),
+      asr: Array(30).fill(false),
+      maghrib: Array(30).fill(false),
+      isha: Array(30).fill(false),
+    };
+  });
+
+  const [quranProgress, setQuranProgress] = useState(() => {
+    const saved = localStorage.getItem('ramadan_quran');
+    return saved ? parseInt(saved) : 0;
+  });
+
+  const [goodDeeds, setGoodDeeds] = useState(() => {
+    const saved = localStorage.getItem('ramadan_deeds');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [checkedDuas, setCheckedDuas] = useState(() => {
+    const saved = localStorage.getItem('ramadan_duas');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Save data whenever it changes
+  useEffect(() => {
+    localStorage.setItem('ramadan_fasting', JSON.stringify(fastingDays));
+  }, [fastingDays]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % affirmations.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
+    localStorage.setItem('ramadan_prayers', JSON.stringify(prayers));
+  }, [prayers]);
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="page-container"
-    >
-      <div className="content-center-wide">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="emoji-huge"
-        >
-          💖
-        </motion.div>
+  useEffect(() => {
+    localStorage.setItem('ramadan_quran', quranProgress.toString());
+  }, [quranProgress]);
 
-        <h2 className="title-large">
-          Just So You Know...
-        </h2>
+  useEffect(() => {
+    localStorage.setItem('ramadan_deeds', JSON.stringify(goodDeeds));
+  }, [goodDeeds]);
 
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={current}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="affirmation-text"
-          >
-            "{affirmations[current]}"
-          </motion.p>
-        </AnimatePresence>
+  useEffect(() => {
+    localStorage.setItem('ramadan_duas', JSON.stringify(checkedDuas));
+  }, [checkedDuas]);
 
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={onNext}
-          className="btn-primary"
-        >
-          You're Making Me Blush! 😊
-        </motion.button>
-      </div>
-    </motion.div>
-  );
-};
-
-// 💌 Love Letter Page
-const LoveLetterPage = ({ onNext }) => {
-  const [revealed, setRevealed] = useState(false);
-
-  const letter = `My Dearest Zee,
-
-I know I can be silly, annoying, and sometimes disturb you with calls throughout the day... but somehow you still choose to keep me around. That's either true love or temporary insanity, and I'm hoping it's the first one! 😂
-
-You make the boring stuff fun.  You laugh at my terrible jokes (or at least pretend to). You're my best friend, my partner in crime, and the person I want to annoy for the rest of my life.
-
-Thanks for being YOU - perfectly imperfect, wonderfully weird, and absolutely mine.
-
-Forever and always,
-Your Favorite Weirdo 💕`;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="page-container"
-    >
-      <div className="letter-container">
-        <motion.div
-          initial={{ rotateY: 0 }}
-          animate={{ rotateY: revealed ? 180 : 0 }}
-          transition={{ duration: 0.6 }}
-          className="letter-flip"
-        >
-          {/* Front of envelope */}
-          <div className={`letter-front ${revealed ? 'hidden absolute-layout' : ''}`}>
-            <div className="envelope" onClick={() => setRevealed(true)}>
-              <div className="emoji-huge">💌</div>
-              <h2 className="title-medium">
-                A Letter For You
-              </h2>
-              <p className="subtitle">Tap to open</p>
-            </div>
-          </div>
-
-          {/* Back - Letter content */}
-          <div className={`letter-back ${revealed ? 'relative-layout' : 'hidden'}`}>
-            <div className="letter-content">
-              <div className="emoji-large">💖</div>
-              <div className="letter-text">
-                {letter}
-              </div>
-
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onNext}
-                className="btn-primary"
-              >
-                I Love You Too! 💕
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-};
-
-// 🎯 Final Interactive Page
-const FinalPage = () => {
-  const [hearts, setHearts] = useState([]);
-  const [clicks, setClicks] = useState(0);
-
-  const addHeart = (e) => {
-    const heart = {
-      id: Date.now(),
-      x: e.clientX,
-      y: e.clientY
-    };
-    setHearts(prev => [...prev, heart]);
-    setClicks(prev => prev + 1);
-    setTimeout(() => {
-      setHearts(prev => prev.filter(h => h.id !== heart.id));
-    }, 2000);
+  const toggleFasting = (day) => {
+    const newDays = [...fastingDays];
+    newDays[day] = !newDays[day];
+    setFastingDays(newDays);
   };
 
+  const togglePrayer = (prayer, day) => {
+    const newPrayers = { ...prayers };
+    newPrayers[prayer][day] = !newPrayers[prayer][day];
+    setPrayers(newPrayers);
+  };
+
+  const addGoodDeed = (deed) => {
+    const newDeeds = [...goodDeeds, { text: deed, date: new Date().toISOString(), day: ramadanDay }];
+    setGoodDeeds(newDeeds);
+  };
+
+  const toggleDua = (duaText) => {
+    if (checkedDuas.includes(duaText)) {
+      setCheckedDuas(checkedDuas.filter(d => d !== duaText));
+    } else {
+      setCheckedDuas([...checkedDuas, duaText]);
+    }
+  };
+
+  const todaysPrayers = {
+    fajr: prayers.fajr[ramadanDay - 1],
+    dhuhr: prayers.dhuhr[ramadanDay - 1],
+    asr: prayers.asr[ramadanDay - 1],
+    maghrib: prayers.maghrib[ramadanDay - 1],
+    isha: prayers.isha[ramadanDay - 1],
+  };
+
+  const completedPrayers = Object.values(todaysPrayers).filter(Boolean).length;
+  const fastingCompleted = fastingDays.filter(Boolean).length;
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="page-container interactive-page"
-      onClick={addHeart}
-    >
-      <div className="content-center">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 5, -5, 0]
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="emoji-huge"
-        >
-          {clicks > 50 ? '👫' : clicks > 30 ? '💑' : clicks > 10 ? '🥰' : '💝'}
-        </motion.div>
-
-        <h1 className="title-hero">
-          You + Me = Forever
-        </h1>
-
-        <p className="text-large">
-          {clicks > 50 ? "Okay okay, I get it! You love me too! 😂💕" :
-            clicks > 30 ? "Aww, someone's feeling lovey-dovey! 🥰" :
-              clicks > 10 ? "Keep clicking if you love me! 💖" :
-                "Click anywhere to spread the love! ✨"}
-        </p>
-
-        <div className="love-counter glass">
-          <p className="counter-text">
-            Love Clicks: <span className="counter-number">{clicks}</span> 💕
-          </p>
+    <div className="dashboard">
+      {/* Header */}
+      <div className="dashboard-header">
+        <div className="header-content">
+          <h1 className="header-title">رَمَضَان مُبَارَك</h1>
+          <p className="header-subtitle">Our Blessed Journey Together</p>
+        </div>
+        <div className="day-selector">
+          <button onClick={() => setRamadanDay(Math.max(1, ramadanDay - 1))} className="day-btn">‹</button>
+          <div className="current-day">
+            <span className="day-label">Day</span>
+            <span className="day-number">{ramadanDay}</span>
+          </div>
+          <button onClick={() => setRamadanDay(Math.min(30, ramadanDay + 1))} className="day-btn">›</button>
         </div>
       </div>
 
-      {/* Floating hearts on click */}
-      {hearts.map(heart => (
-        <motion.div
-          key={heart.id}
-          initial={{
-            x: heart.x - 16,
-            y: heart.y - 16,
-            scale: 0,
-            opacity: 1
-          }}
-          animate={{
-            y: heart.y - 150,
-            scale: [0, 1.5, 1],
-            opacity: [1, 1, 0]
-          }}
-          transition={{ duration: 2 }}
-          className="floating-heart"
-          style={{ left: 0, top: 0 }}
+      {/* Tabs */}
+      <div className="tabs">
+        <button
+          className={`tab ${activeTab === 'overview' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('overview')}
         >
-          💖
-        </motion.div>
-      ))}
+          📊 Overview
+        </button>
+        <button
+          className={`tab ${activeTab === 'prayers' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('prayers')}
+        >
+          🕌 Prayers
+        </button>
+        <button
+          className={`tab ${activeTab === 'quran' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('quran')}
+        >
+          📖 Quran
+        </button>
+        <button
+          className={`tab ${activeTab === 'duas' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('duas')}
+        >
+          🤲 Duas
+        </button>
+        <button
+          className={`tab ${activeTab === 'deeds' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('deeds')}
+        >
+          ✨ Deeds
+        </button>
+      </div>
+
+      {/* Content */}
+      <AnimatePresence mode="wait">
+        {activeTab === 'overview' && (
+          <OverviewTab
+            key="overview"
+            ramadanDay={ramadanDay}
+            fastingDays={fastingDays}
+            toggleFasting={toggleFasting}
+            completedPrayers={completedPrayers}
+            quranProgress={quranProgress}
+            fastingCompleted={fastingCompleted}
+          />
+        )}
+        {activeTab === 'prayers' && (
+          <PrayersTab
+            key="prayers"
+            ramadanDay={ramadanDay}
+            prayers={prayers}
+            togglePrayer={togglePrayer}
+            todaysPrayers={todaysPrayers}
+          />
+        )}
+        {activeTab === 'quran' && (
+          <QuranTab
+            key="quran"
+            quranProgress={quranProgress}
+            setQuranProgress={setQuranProgress}
+          />
+        )}
+        {activeTab === 'duas' && (
+          <DuasTab
+            key="duas"
+            checkedDuas={checkedDuas}
+            toggleDua={toggleDua}
+          />
+        )}
+        {activeTab === 'deeds' && (
+          <DeedsTab
+            key="deeds"
+            goodDeeds={goodDeeds}
+            addGoodDeed={addGoodDeed}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+// 📊 Overview Tab
+const OverviewTab = ({ ramadanDay, fastingDays, toggleFasting, completedPrayers, quranProgress, fastingCompleted }) => {
+  const verse = quranVerses[ramadanDay % quranVerses.length];
+  const message = loveMessages[ramadanDay % loveMessages.length];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="tab-content"
+    >
+      {/* Daily Verse */}
+      <div className="verse-card">
+        <p className="verse-arabic">{verse.arabic}</p>
+        <p className="verse-translation">{verse.translation}</p>
+        <p className="verse-reference">{verse.reference}</p>
+      </div>
+
+      {/* Love Message */}
+      <div className="love-message-card">
+        <div className="heart-icon">💚</div>
+        <p className="love-message">{message}</p>
+      </div>
+
+      {/* Today's Progress */}
+      <div className="progress-grid">
+        <div className="progress-card">
+          <div className="progress-icon">🌙</div>
+          <div className="progress-info">
+            <div className="progress-label">Fasting</div>
+            <div className="progress-status">
+              <input
+                type="checkbox"
+                checked={fastingDays[ramadanDay - 1]}
+                onChange={() => toggleFasting(ramadanDay - 1)}
+                className="custom-checkbox"
+              />
+              <span>{fastingDays[ramadanDay - 1] ? 'Completed ✓' : 'Mark as done'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="progress-card">
+          <div className="progress-icon">🕌</div>
+          <div className="progress-info">
+            <div className="progress-label">Prayers</div>
+            <div className="progress-value">{completedPrayers}/5</div>
+          </div>
+        </div>
+
+        <div className="progress-card">
+          <div className="progress-icon">📖</div>
+          <div className="progress-info">
+            <div className="progress-label">Quran</div>
+            <div className="progress-value">{quranProgress}/30 Juz</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Month Overview */}
+      <div className="month-overview">
+        <h3 className="section-title">Ramadan Calendar</h3>
+        <div className="calendar-grid">
+          {Array.from({ length: 30 }, (_, i) => (
+            <div
+              key={i}
+              className={`calendar-day ${fastingDays[i] ? 'completed' : ''} ${i + 1 === ramadanDay ? 'current' : ''}`}
+            >
+              {i + 1}
+              {fastingDays[i] && <span className="check-mark">✓</span>}
+            </div>
+          ))}
+        </div>
+        <div className="calendar-stats">
+          <span>{fastingCompleted}/30 days completed</span>
+        </div>
+      </div>
     </motion.div>
   );
 };
 
-// 🎨 Main App
-function App() {
-  const [unlocked, setUnlocked] = useState(false);
-  const [step, setStep] = useState(0);
-
-  const pages = [
-    <WelcomePage onNext={() => setStep(1)} />,
-    <HumorPage onNext={() => setStep(2)} />,
-    <AffirmationPage onNext={() => setStep(3)} />,
-    <LoveLetterPage onNext={() => setStep(4)} />,
-    <FinalPage />
+// 🕌 Prayers Tab
+const PrayersTab = ({ ramadanDay, prayers, togglePrayer, todaysPrayers }) => {
+  const prayerNames = [
+    { key: 'fajr', name: 'Fajr', icon: '🌅', time: 'Dawn' },
+    { key: 'dhuhr', name: 'Dhuhr', icon: '☀️', time: 'Noon' },
+    { key: 'asr', name: 'Asr', icon: '🌤️', time: 'Afternoon' },
+    { key: 'maghrib', name: 'Maghrib', icon: '🌆', time: 'Sunset' },
+    { key: 'isha', name: 'Isha', icon: '🌙', time: 'Night' },
   ];
 
+  const totalCompleted = Object.values(prayers).reduce((sum, prayerDays) =>
+    sum + prayerDays.filter(Boolean).length, 0
+  );
+
   return (
-    <div className="app-container">
-      <FloatingBackground />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="tab-content"
+    >
+      <div className="prayers-header">
+        <h3 className="section-title">Day {ramadanDay} Prayers</h3>
+        <div className="prayers-stats">
+          {Object.values(todaysPrayers).filter(Boolean).length}/5 completed
+        </div>
+      </div>
 
-      <AnimatePresence mode="wait">
-        {!unlocked ? (
-          <PasswordModal onUnlock={() => setUnlocked(true)} />
-        ) : (
-          <motion.div
-            key={step}
-            className="page-wrapper"
-          >
-            {pages[step]}
-          </motion.div>
+      <div className="prayers-list">
+        {prayerNames.map(prayer => (
+          <div key={prayer.key} className="prayer-item">
+            <div className="prayer-info">
+              <span className="prayer-icon">{prayer.icon}</span>
+              <div>
+                <div className="prayer-name">{prayer.name}</div>
+                <div className="prayer-time">{prayer.time}</div>
+              </div>
+            </div>
+            <label className="prayer-checkbox">
+              <input
+                type="checkbox"
+                checked={todaysPrayers[prayer.key]}
+                onChange={() => togglePrayer(prayer.key, ramadanDay - 1)}
+              />
+              <span className="checkmark"></span>
+            </label>
+          </div>
+        ))}
+      </div>
+
+      <div className="prayers-total">
+        <div className="total-card">
+          <div className="total-number">{totalCompleted}</div>
+          <div className="total-label">Total prayers this Ramadan</div>
+          <div className="total-subtitle">Out of {ramadanDay * 5} possible</div>
+        </div>
+      </div>
+
+      <div className="hadith-card">
+        <p className="hadith-icon">📿</p>
+        <p className="hadith-text">"The five daily prayers... are expiation for whatever sins come in between, so long as one does not commit any major sin."</p>
+        <p className="hadith-reference">- Sahih Muslim</p>
+      </div>
+    </motion.div>
+  );
+};
+
+// 📖 Quran Tab
+const QuranTab = ({ quranProgress, setQuranProgress }) => {
+  const juzNames = Array.from({ length: 30 }, (_, i) => `Juz ${i + 1}`);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="tab-content"
+    >
+      <div className="quran-header">
+        <h3 className="section-title">Quran Progress</h3>
+        <div className="quran-stats">
+          {quranProgress}/30 Juz completed
+        </div>
+      </div>
+
+      <div className="quran-progress-circle">
+        <svg className="progress-ring" width="200" height="200">
+          <circle
+            className="progress-ring-circle-bg"
+            cx="100"
+            cy="100"
+            r="90"
+          />
+          <circle
+            className="progress-ring-circle"
+            cx="100"
+            cy="100"
+            r="90"
+            style={{
+              strokeDashoffset: 565 - (565 * quranProgress) / 30
+            }}
+          />
+        </svg>
+        <div className="progress-ring-text">
+          <div className="progress-percentage">{Math.round((quranProgress / 30) * 100)}%</div>
+          <div className="progress-label">Complete</div>
+        </div>
+      </div>
+
+      <div className="juz-selector">
+        <label className="juz-label">Update Progress:</label>
+        <input
+          type="range"
+          min="0"
+          max="30"
+          value={quranProgress}
+          onChange={(e) => setQuranProgress(parseInt(e.target.value))}
+          className="juz-slider"
+        />
+        <div className="juz-display">{quranProgress} Juz</div>
+      </div>
+
+      <div className="quran-goal">
+        <div className="goal-icon">🎯</div>
+        <div className="goal-text">
+          <strong>Goal:</strong> Complete the entire Quran this Ramadan!
+        </div>
+        {quranProgress === 30 && (
+          <div className="goal-celebration">
+            <div className="celebration-icon">🎉</div>
+            <p>Alhamdulillah! You completed the Quran! May Allah accept it! 💚</p>
+          </div>
         )}
-      </AnimatePresence>
+      </div>
 
-      {/* Navigation dots */}
-      {unlocked && (
-        <div className="nav-dots">
-          {pages.map((_, i) => (
-            <motion.button
-              key={i}
-              whileHover={{ scale: 1.2 }}
-              onClick={() => setStep(i)}
-              className={`nav-dot ${i === step ? 'nav-dot-active' : ''}`}
-            />
+      <div className="hadith-card">
+        <p className="hadith-icon">📖</p>
+        <p className="hadith-text">"Read the Quran, for it will come as an intercessor for its reciters on the Day of Resurrection."</p>
+        <p className="hadith-reference">- Sahih Muslim</p>
+      </div>
+    </motion.div>
+  );
+};
+
+// 🤲 Duas Tab
+const DuasTab = ({ checkedDuas, toggleDua }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="tab-content"
+    >
+      <div className="duas-header">
+        <h3 className="section-title">Our Dua List</h3>
+        <p className="duas-subtitle">Prayers we're making together 🤲</p>
+      </div>
+
+      {duaCategories.map(category => (
+        <div key={category.id} className="dua-category">
+          <h4 className="category-title">{category.title}</h4>
+          <div className="duas-list">
+            {category.duas.map((dua, index) => (
+              <div key={index} className="dua-item">
+                <label className="dua-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={checkedDuas.includes(dua)}
+                    onChange={() => toggleDua(dua)}
+                  />
+                  <span className="checkmark"></span>
+                </label>
+                <span className={`dua-text ${checkedDuas.includes(dua) ? 'checked' : ''}`}>
+                  {dua}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      <div className="dua-reminder">
+        <div className="reminder-icon">✨</div>
+        <p className="reminder-text">
+          "And when My servants ask you concerning Me, indeed I am near. I respond to the invocation of the supplicant when he calls upon Me."
+        </p>
+        <p className="reminder-reference">- Al-Baqarah 2:186</p>
+      </div>
+    </motion.div>
+  );
+};
+
+// ✨ Good Deeds Tab
+const DeedsTab = ({ goodDeeds, addGoodDeed }) => {
+  const [newDeed, setNewDeed] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (newDeed.trim()) {
+      addGoodDeed(newDeed.trim());
+      setNewDeed('');
+    }
+  };
+
+  const deedsByDay = goodDeeds.reduce((acc, deed) => {
+    if (!acc[deed.day]) acc[deed.day] = [];
+    acc[deed.day].push(deed);
+    return acc;
+  }, {});
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="tab-content"
+    >
+      <div className="deeds-header">
+        <h3 className="section-title">Good Deeds</h3>
+        <div className="deeds-count">{goodDeeds.length} deeds recorded</div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="add-deed-form">
+        <input
+          type="text"
+          value={newDeed}
+          onChange={(e) => setNewDeed(e.target.value)}
+          placeholder="Add a good deed... (e.g., Gave sadaqah, helped someone)"
+          className="deed-input"
+        />
+        <motion.button
+          type="submit"
+          className="deed-btn"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Add ✨
+        </motion.button>
+      </form>
+
+      {goodDeeds.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">🌟</div>
+          <p>Start recording your good deeds!</p>
+        </div>
+      ) : (
+        <div className="deeds-timeline">
+          {Object.keys(deedsByDay).sort((a, b) => b - a).map(day => (
+            <div key={day} className="deeds-day">
+              <div className="day-badge">Day {day}</div>
+              <div className="deeds-day-list">
+                {deedsByDay[day].map((deed, index) => (
+                  <div key={index} className="deed-card">
+                    <span className="deed-icon">✓</span>
+                    <span className="deed-text">{deed.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
+
+      <div className="hadith-card">
+        <p className="hadith-icon">💎</p>
+        <p className="hadith-text">"Whoever does a good deed will have ten times as much."</p>
+        <p className="hadith-reference">- Al-An'am 6:160</p>
+      </div>
+    </motion.div>
+  );
+};
+
+// 🎮 Main App
+function App() {
+  const [unlocked, setUnlocked] = useState(false);
+
+  return (
+    <div className="ramadan-app">
+      <AnimatePresence mode="wait">
+        {!unlocked ? (
+          <PasswordScreen key="password" onUnlock={() => setUnlocked(true)} />
+        ) : (
+          <Dashboard key="dashboard" />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
