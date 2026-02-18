@@ -97,7 +97,7 @@ const PasswordScreen = ({ onUnlock }) => {
               className="password-input"
               autoFocus
             />
-            {error && <p className="password-error">Try again, habibi 💚</p>}
+            {error && <p className="password-error">Try again, حبيبتي (Habibti) 💚</p>}
             <motion.button
               type="submit"
               className="password-btn"
