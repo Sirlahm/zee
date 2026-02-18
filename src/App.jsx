@@ -60,11 +60,11 @@ const PasswordScreen = ({ onUnlock }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
 
-  const SECRET = 'ridzee'; // Change this!
+  const SECRETS = ['ramadan', 'ridzee'];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password.toLowerCase() === SECRET) {
+    if (SECRETS.includes(password.toLowerCase())) {
       onUnlock();
     } else {
       setError(true);
