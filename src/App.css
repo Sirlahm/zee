@@ -267,9 +267,15 @@ body {
   justify-content: center;
 }
 
-.day-btn:hover {
+.day-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
+}
+
+.day-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .current-day {

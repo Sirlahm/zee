@@ -117,7 +117,39 @@ const PasswordScreen = ({ onUnlock }) => {
 // 🏠 Main Dashboard
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [ramadanDay, setRamadanDay] = useState(1);
+  // Calculate the current Ramadan day (assuming Feb 18, 2026 as Day 1)
+  const calculateCurrentDay = () => {
+    const startDate = new Date('2026-02-18T00:00:00');
+    const now = new Date();
+    const diffTime = now - startDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    let day = diffDays + 1;
+
+    // Fasting ends at 7 PM, so at 7 PM it effectively becomes the next day's cycle
+    if (now.getHours() >= 19) {
+      day += 1;
+    }
+    return Math.max(1, Math.min(30, day));
+  };
+
+  const [ramadanDay, setRamadanDay] = useState(() => {
+    const saved = localStorage.getItem('ramadan_current_day');
+    const savedForDay = localStorage.getItem('ramadan_for_day');
+    const currentAutoDay = calculateCurrentDay();
+
+    // If we are in the same Ramadan "day" cycle, keep the user's viewed day
+    // Otherwise (e.g., it's passed 7 PM or it's a new day), reset to the auto-calculated day
+    if (saved && savedForDay && parseInt(savedForDay) === currentAutoDay) {
+      return parseInt(saved);
+    }
+    return currentAutoDay;
+  });
+
+  // Save the day whenever it changes
+  useEffect(() => {
+    localStorage.setItem('ramadan_current_day', ramadanDay.toString());
+    localStorage.setItem('ramadan_for_day', calculateCurrentDay().toString());
+  }, [ramadanDay]);
 
   // Load saved data
   const [fastingDays, setFastingDays] = useState(() => {
@@ -208,6 +240,8 @@ const Dashboard = () => {
   const completedPrayers = Object.values(todaysPrayers).filter(Boolean).length;
   const fastingCompleted = fastingDays.filter(Boolean).length;
 
+  const maxAllowedDay = calculateCurrentDay();
+
   return (
     <div className="dashboard">
       {/* Header */}
@@ -217,12 +251,20 @@ const Dashboard = () => {
           <p className="header-subtitle">Our Blessed Journey Together</p>
         </div>
         <div className="day-selector">
-          <button onClick={() => setRamadanDay(Math.max(1, ramadanDay - 1))} className="day-btn">‹</button>
+          <button
+            onClick={() => setRamadanDay(Math.max(1, ramadanDay - 1))}
+            className="day-btn"
+            disabled={ramadanDay <= 1}
+          >‹</button>
           <div className="current-day">
             <span className="day-label">Day</span>
             <span className="day-number">{ramadanDay}</span>
           </div>
-          <button onClick={() => setRamadanDay(Math.min(30, ramadanDay + 1))} className="day-btn">›</button>
+          <button
+            onClick={() => setRamadanDay(Math.min(maxAllowedDay, ramadanDay + 1))}
+            className="day-btn"
+            disabled={ramadanDay >= maxAllowedDay}
+          >›</button>
         </div>
       </div>
 
